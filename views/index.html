@@ -6,16 +6,21 @@
   </head>
   <body>
     <h1><%= title %></h1>
-	<div id="waveform"></div>
-	<div>
-		<button id="play"> Play/Pause </button>
-		<button id="stop"> Stop </button>
-		<button id="download"> Download </button>
+    <div id="waveform"></div>
+    <div id="waveform-timeline"></div>
+    <div>
+        <input type="file" id="upload" accept = "audio/*"/> 
+		<button id="play"> 재생/일시정지 </button>
+		<button id="stop"> 정지 </button>
+        <button id="download"> 다운로드 </button>
+        <button id="region"> 드래그로 영역지정 </button>
 
-	</div>
-	
+    </div>
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"> </script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.3.2/wavesurfer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.3.2/wavesurfer.min.js"></script>
+    <script src="/js/wavesurfer.timeline.js"></script>
+    <script src="/js/wavesurfer.regions.js"></script>
 	<script src="/js/fileDownloader.js"></script>
 	<script src="/js/audioRenderer.js"></script>
   </body>

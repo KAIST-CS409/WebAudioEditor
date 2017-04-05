@@ -1,6 +1,6 @@
 var wavesurfer;
 
-$ (document).ready(function() {
+$(document).ready(function() {
 	wavesurfer = WaveSurfer.create({
 	    container: '#waveform',
 	    waveColor: 'violet',
@@ -33,6 +33,15 @@ $ (document).ready(function() {
 	});
     $("#upload").change(function() {
         wavesurfer.loadBlob(this.files[0]);
+    });
+    $("#region").click(function() {
+        if (this.style.borderStyle!=='inset') {
+            wavesurfer.enableDragSelection({});
+            this.style.borderStyle = 'inset';
+        } else {
+            wavesurfer.disableDragSelection({});
+            this.style.borderStyle = 'outset';
+        }
     });
 
 });
