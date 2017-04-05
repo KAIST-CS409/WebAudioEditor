@@ -8,7 +8,7 @@ $ (document).ready(function() {
     	//barWidth: 2,
     	cursorWidth: 2,
     	//height: 300,
-    	splitChannels: true
+    	//splitChannels: true
 	});
 	//wavesurfer.load('http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3');
 	wavesurfer.load('/tracks/electric_romeo.mp3');
@@ -25,5 +25,9 @@ $ (document).ready(function() {
 	});
 	$("#download").click(function() {
 		saveToWav(wavesurfer.backend.buffer);
-	})
+	});
+    $("#upload").change(function() {
+        wavesurfer.loadBlob(this.files[0]);
+    });
+
 });
