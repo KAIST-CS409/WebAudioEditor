@@ -14,6 +14,11 @@ $ (document).ready(function() {
 	wavesurfer.load('/tracks/electric_romeo.mp3');
 	wavesurfer.on('ready', function () {
 	    wavesurfer.play();
+        var timeline = Object.create(WaveSurfer.Timeline);
+        timeline.init({
+            wavesurfer: wavesurfer,
+            container: '#waveform-timeline'
+        });
 	});
 
 	$("#play").click(function() {
