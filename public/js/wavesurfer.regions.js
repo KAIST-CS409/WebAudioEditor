@@ -57,6 +57,8 @@ WaveSurfer.Regions = {
             drag = true;
             start = my.wavesurfer.drawer.handleEvent(e, true);
             region = null;
+
+            my.clear();
         };
         this.wrapper.addEventListener('mousedown', eventDown);
         this.wrapper.addEventListener('touchstart', eventDown);

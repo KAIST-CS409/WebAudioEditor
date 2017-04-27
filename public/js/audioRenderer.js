@@ -8,10 +8,10 @@ $(document).ready(function() {
     	//barWidth: 2,
     	cursorWidth: 2,
     	//height: 300,
-    	//splitChannels: true
+    	//splitChannels: true,
+        //scrollParent: true
 	});
-	//wavesurfer.load('http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3');
-	wavesurfer.load('/tracks/electric_romeo.mp3');
+    wavesurfer.load('/tracks/Inuyasha_gayagm.mp3');
 	wavesurfer.on('ready', function () {
 	    wavesurfer.play();
         var timeline = Object.create(WaveSurfer.Timeline);
@@ -19,6 +19,8 @@ $(document).ready(function() {
             wavesurfer: wavesurfer,
             container: '#waveform-timeline'
         });
+
+        wavesurfer.enableDragSelection({});
 	});
 
 	$("#play").click(function() {
@@ -34,14 +36,4 @@ $(document).ready(function() {
     $("#upload").change(function() {
         wavesurfer.loadBlob(this.files[0]);
     });
-    $("#region").click(function() {
-        if (this.style.borderStyle!=='inset') {
-            wavesurfer.enableDragSelection({});
-            this.style.borderStyle = 'inset';
-        } else {
-            wavesurfer.disableDragSelection({});
-            this.style.borderStyle = 'outset';
-        }
-    });
-
 });
