@@ -39,3 +39,6 @@ jspm_packages
 #.DS_Store
 .DS_Store
 
+#.swp
+*.swp
+

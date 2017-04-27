@@ -50,7 +50,7 @@ WaveSurfer.Regions = {
             // Check whether the click/tap is on the bottom-most DOM element
             // Effectively prevent clicks on the scrollbar from registering as
             // region creation.
-            if (e.target.childElementCount > 0) { return; }
+            //if (e.target.childElementCount > 0) { return; }
 
             touchId = e.targetTouches ? e.targetTouches[0].identifier : null;
 
@@ -144,7 +144,7 @@ WaveSurfer.Region = {
         this.maxLength = params.maxLength;
         this.minLength = params.minLength;
 
-        this.bindInOut();
+        //this.bindInOut();
         this.render();
 
         this.onZoom = this.updateRender.bind(this);
@@ -259,7 +259,7 @@ WaveSurfer.Region = {
 
         this.element = this.wrapper.appendChild(regionEl);
         this.updateRender();
-        this.bindEvents(regionEl);
+        //this.bindEvents(regionEl);
     },
 
     formatTime: function (start, end) {
@@ -308,7 +308,7 @@ WaveSurfer.Region = {
                 left: left + 'px',
                 width: regionWidth + 'px',
                 backgroundColor: this.color,
-                cursor: this.drag ? 'move' : 'default'
+                //cursor: this.drag ? 'move' : 'default'
             });
 
             for (var attrname in this.attributes) {
