@@ -35,6 +35,14 @@ WaveSurfer.Regions = {
         }, this);
     },
 
+    /* Remove all regions in wavesurferList which is global wavesurfer list */
+    clearAll: function () {
+        for (var i = 0; i < wavesurferList.length; i++) {
+            var regionList = wavesurferList[i].regions;
+            regionList.clear();
+        }
+    },
+
     enableDragSelection: function (params) {
         var my = this;
         var drag;
@@ -58,7 +66,7 @@ WaveSurfer.Regions = {
             start = my.wavesurfer.drawer.handleEvent(e, true);
             region = null;
 
-            my.clear();
+            my.clearAll();
         };
         this.wrapper.addEventListener('mousedown', eventDown);
         this.wrapper.addEventListener('touchstart', eventDown);
