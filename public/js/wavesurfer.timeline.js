@@ -47,6 +47,14 @@ WaveSurfer.Timeline = {
             this.updateScroll(e);
         }.bind(this));
 
+        this.on("click", function (position) {
+            var time = position * this.wavesurfer.backend.getDuration();
+            for (var i = 0; i < wavesurferList.length; i++) {
+                var progress = time / wavesurferList[i].backend.getDuration();
+                wavesurferList[i].seekTo(progress);
+            }
+        }.bind(this));
+
         this._onRedraw = wavesurfer.on('redraw', this.render.bind(this));
         this._onZoom = wavesurfer.on('zoom', this.render.bind(this));
         this._onDestroy = wavesurfer.on('destroy', this.destroy.bind(this));
@@ -95,7 +103,7 @@ WaveSurfer.Timeline = {
 
         var my = this;
         this.wrapper.addEventListener('click', function (e) {
-            e.preventDefault();
+            //e.preventDefault();
             var relX = 'offsetX' in e ? e.offsetX : e.layerX;
             my.fireEvent('click', (relX / my.wrapper.scrollWidth) || 0);
         });

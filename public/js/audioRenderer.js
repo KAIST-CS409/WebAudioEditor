@@ -1,6 +1,7 @@
 var wavesurferList = [];
 var maxTrackLength = 0;
 var timeline;
+var region;
 
 $(document).ready(function() {
     wavesurferList.push(getEmptyContainer());

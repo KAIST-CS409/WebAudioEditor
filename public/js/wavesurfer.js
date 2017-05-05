@@ -111,14 +111,12 @@ var WaveSurfer = {
         });
 
         // Click-to-seek
-        
         /*
         this.drawer.on('mousedown', function (e, progress) {
-            setTimeout(function () {
-                my.seekTo(progress);
-            }, 0);
-        });
+            my.seekTo(progress);
+        }
         */
+        
         
 
         this.drawer.on('mousedown', function (e, progress) {
@@ -350,7 +348,6 @@ var WaveSurfer = {
 
         // Fill container
         if (this.params.fillParent && (!this.params.scrollParent || nominalWidth < parentWidth)) {
-            console.log("Fill container");
             if (maxTrackLength == 0) {
                 width = parentWidth;
             } else {
