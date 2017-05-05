@@ -43,6 +43,12 @@ WaveSurfer.Regions = {
         }
     },
 
+    resetPlayBar: function() {
+        for (var i = 0; i < wavesurferList.length; i++) {
+            wavesurferList[i].stop();
+        }
+    },
+
     enableDragSelection: function (params) {
         var my = this;
         var drag;
@@ -112,6 +118,8 @@ WaveSurfer.Regions = {
                 start: Math.min(end * duration, start * duration),
                 end: Math.max(end * duration, start * duration)
             });
+
+            //my.resetPlayBar();
         };
         this.wrapper.addEventListener('mousemove', eventMove);
         this.wrapper.addEventListener('touchmove', eventMove);
