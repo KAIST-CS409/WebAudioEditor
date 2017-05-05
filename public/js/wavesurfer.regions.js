@@ -46,6 +46,12 @@ WaveSurfer.Regions = {
         }
     },
 
+    clearGlobal: function() {
+        if (globalRegion != null) {
+            globalRegion.remove();
+        }
+    },
+
     resetPlayBar: function() {
         for (var i = 0; i < wavesurferList.length; i++) {
             wavesurferList[i].stop();
@@ -75,17 +81,17 @@ WaveSurfer.Regions = {
             start = my.wavesurfer.drawer.handleEvent(e, true);
             start = my.wavesurfer.adjustProgress(start);
 
-            my.clearAll();
+            //my.clearAll();
+            my.clearGlobal();
 
             region = null;
             region = my.add(params || {});
 
             var duration = my.wavesurfer.getDuration();
-            var end = my.wavesurfer.drawer.handleEvent(e);
-            end = my.wavesurfer.adjustProgress(end);
+            //console.log(Math.max(start * duration + 0.5, start * duration) - Math.min(start * duration + 0.5, start * duration));
             region.update({
-                start: Math.min(end * duration + 0.5, start * duration),
-                end: Math.max(end * duration + 0.5, start * duration)
+                start: Math.min(start * duration + 0.5, start * duration),
+                end: Math.max(start * duration + 0.5, start * duration)
             });
         };
         this.wrapper.addEventListener('mousedown', eventDown);

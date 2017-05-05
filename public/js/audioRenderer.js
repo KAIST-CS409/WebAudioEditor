@@ -1,6 +1,6 @@
 var wavesurferList = [];
 var maxTrackLength = 0;
-var globalTimeline;
+var globalTimeline = null;
 var globalRegion = null;
 
 $(document).ready(function() {
@@ -10,8 +10,6 @@ $(document).ready(function() {
     wavesurferList[1].load("/tracks/electric_romeo.mp3");
 
     $("#addRow").on("click", addTrackRow);
-
-    bindGeneralButtons();
 });
 
 function addTrackRow() {
@@ -32,8 +30,6 @@ function addTrackRow() {
 
     $("#waveContent").append(newRowtag);
     wavesurferList.push(getEmptyContainer());
-
-    bindGeneralButtons();
 }
 
 function getEmptyContainer() {
@@ -52,12 +48,12 @@ function getEmptyContainer() {
         //wsInstance.play();
 
         wsInstance.enableDragSelection({
-            color: "rgba(0, 0, 0, 0.2)",
+            color: "rgba(0, 0, 0, 0.5)",
         });
 
         var length = wsInstance.backend.getDuration();
         var currentTimeLineLength = 0;
-        if (typeof globalTimeline != 'undefined') {
+        if (globalTimeline != null) {
             currentTimeLineLength = globalTimeline.wavesurfer.backend.getDuration();
         }
         if (wsInstance.backend.getDuration() > currentTimeLineLength) {
@@ -75,6 +71,8 @@ function getEmptyContainer() {
             }
         }
 
+        console.log("bind buttons");
+        bindGeneralButtons();
     });
     $("#play" + waveformNum).click(function() {
         wsInstance.playPause();
@@ -93,12 +91,14 @@ function getEmptyContainer() {
 }
 
 function bindGeneralButtons() {
+    $("#play").unbind("click");
     $("#play").click(function() {
         for (var i = 0; i < wavesurferList.length; i++) {
             wavesurferList[i].playPause();
         }
     });
 
+    $("#stop").unbind("click");
     $("#stop").click(function() {
         for (var i = 0; i < wavesurferList.length; i++) {
             wavesurferList[i].stop(0);
