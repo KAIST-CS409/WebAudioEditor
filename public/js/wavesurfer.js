@@ -105,7 +105,6 @@ var WaveSurfer = {
         this.drawer.init(this.container, this.params);
 
         this.drawer.on('redraw', function () {
-            console.log("redraw!");
             my.drawBuffer();
             my.drawer.progress(my.backend.getPlayedPercents());
         });
@@ -156,7 +155,12 @@ var WaveSurfer = {
         this.backend.on('pause', function () { my.fireEvent('pause'); });
 
         this.backend.on('audioprocess', function (time) {
-            my.drawer.progress(my.backend.getPlayedPercents());
+            for (var i = 0; i < wavesurferList.length; i++) {
+                var progress = time / wavesurferList[i].backend.getDuration();
+                wavesurferList[i].drawer.progress(progress);
+            }
+
+            //my.drawer.progress(my.backend.getPlayedPercents());
             my.fireEvent('audioprocess', time);
         });
     },
@@ -1173,12 +1177,15 @@ WaveSurfer.WebAudio = {
 
         if (start == null) {
             start = this.getCurrentTime();
+            /*
             if (start >= this.getDuration()) {
                 start = 0;
             }
+            */
         }
         if (end == null) {
-            end = this.getDuration();
+            //end = this.getDuration();
+            end = maxTrackLength;
         }
 
         this.startPosition = start;
@@ -1213,6 +1220,7 @@ WaveSurfer.WebAudio = {
 
         start = adjustedTime.start;
         end = adjustedTime.end;
+        //console.log("play: " + start + " | " + end);
 
         this.scheduledPause = end;
 

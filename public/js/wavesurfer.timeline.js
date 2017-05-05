@@ -53,6 +53,11 @@ WaveSurfer.Timeline = {
                 var progress = wavesurferList[i].adjustProgress(position);
                 //var progress = time / wavesurferList[i].backend.getDuration();
                 wavesurferList[i].seekTo(progress);
+                if (progress < 1) {
+                    wavesurferList[i].play();
+                } else {
+                    wavesurferList[i].pause();
+                }   
             }
         }.bind(this));
 

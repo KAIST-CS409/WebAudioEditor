@@ -88,10 +88,10 @@ WaveSurfer.Regions = {
             region = my.add(params || {});
 
             var duration = my.wavesurfer.getDuration();
-            //console.log(Math.max(start * duration + 0.5, start * duration) - Math.min(start * duration + 0.5, start * duration));
+            //console.log(Math.max(start * duration + 0.3, start * duration) - Math.min(start * duration + 0.3, start * duration));
             region.update({
-                start: Math.min(start * duration + 0.5, start * duration),
-                end: Math.max(start * duration + 0.5, start * duration)
+                start: Math.min(start * duration + 0.3, start * duration),
+                end: Math.max(start * duration + 0.3, start * duration)
             });
         };
         this.wrapper.addEventListener('mousedown', eventDown);
