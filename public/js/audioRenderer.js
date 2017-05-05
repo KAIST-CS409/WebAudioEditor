@@ -2,6 +2,7 @@ var wavesurferList = [];
 var maxTrackLength = 0;
 var globalTimeline = null;
 var globalRegion = null;
+var globalIsMuted = false;
 
 $(document).ready(function() {
     wavesurferList.push(getEmptyContainer());
@@ -18,6 +19,8 @@ function addTrackRow() {
         <div>
             <div id="waveRow${waveformNum}">
                 <div>
+                    <button id="mute${waveformNum}"> Mute </button>
+                    <input type="range" id="volume${waveformNum}" min="0" max="100" value="50"/>
                     <input type="file" id="upload${waveformNum}" accept = "audio/*"/> 
                     <!-- <button id="play${waveformNum}"> 재생/일시정지 </button>
                     <button id="stop${waveformNum}"> 정지 </button> -->
@@ -70,8 +73,12 @@ function getEmptyContainer() {
                 }
             }
         }
+
+        wsInstance.setVolume(0.5);
+
         bindGeneralButtons();
     });
+    /*
     $("#play" + waveformNum).click(function() {
         wsInstance.playPause();
     });
@@ -79,12 +86,23 @@ function getEmptyContainer() {
     $("#stop" + waveformNum).click(function() {
         wsInstance.stop();
     });
+    */
     $("#download" + waveformNum).click(function() {
         saveToWav(wsInstance.backend.buffer);
     });
     $("#upload" + waveformNum).change(function() {
         wsInstance.loadBlob(this.files[0]);
     });
+
+    $("#volume" + waveformNum).on("input", (function() {
+        wsInstance.setVolume(this.value / 100.0);
+    }));
+
+    $("#mute" + waveformNum).click(function() {
+        wsInstance.toggleMute();
+    });
+
+
     return wsInstance
 }
 
@@ -102,4 +120,13 @@ function bindGeneralButtons() {
             wavesurferList[i].stop(0);
         }
     });
+
+    $("#mute").unbind("click");
+    $("#mute").click(function() {
+        console.log("hi");
+        for (var i = 0; i < wavesurferList.length; i++) {
+            wavesurferList[i].setMute(!globalIsMuted);
+        }
+        globalIsMuted = !globalIsMuted;
+    })
 }

@@ -8,6 +8,7 @@
         <h1><%= title %></h1>
         <div id="waveContent">
             <div>
+                <button id="mute" style="height:30px"> Mute All </button>
                 <button id="play" style="height:30px"> 재생/일시정지 </button>
                 <button id="stop" style="height:30px"> 정지 </button>
             </div>
@@ -16,6 +17,8 @@
             <div>
                 <div id="waveRow0">
                     <div>
+                        <button id="mute0"> Mute </button>
+                        <input type="range" id="volume0" min="0" max="100" value="50"/>
                         <input type="file" id="upload0" accept = "audio/*"/> 
                         <!-- <button id="play0"> 재생/일시정지 </button>
                         <button id="stop0"> 정지 </button> -->
@@ -28,6 +31,8 @@
             <div>
                 <div id="waveRow1">
                     <div>
+                        <button id="mute1"> Mute </button>
+                        <input type="range" id="volume1" min="0" max="100" value="50"/>
                         <input type="file" id="upload1" accept = "audio/*"/> 
                         <!-- <button id="play1"> 재생/일시정지 </button>
                         <button id="stop1"> 정지 </button> -->
