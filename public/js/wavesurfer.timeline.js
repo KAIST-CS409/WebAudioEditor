@@ -48,9 +48,10 @@ WaveSurfer.Timeline = {
         }.bind(this));
 
         this.on("click", function (position) {
-            var time = position * this.wavesurfer.backend.getDuration();
+            //var time = position * this.wavesurfer.backend.getDuration(); //same as position * maxTrackLength
             for (var i = 0; i < wavesurferList.length; i++) {
-                var progress = time / wavesurferList[i].backend.getDuration();
+                var progress = wavesurferList[i].adjustProgress(position);
+                //var progress = time / wavesurferList[i].backend.getDuration();
                 wavesurferList[i].seekTo(progress);
             }
         }.bind(this));

@@ -1,7 +1,7 @@
 var wavesurferList = [];
 var maxTrackLength = 0;
-var timeline;
-var region;
+var globalTimeline;
+var globalRegion = null;
 
 $(document).ready(function() {
     wavesurferList.push(getEmptyContainer());
@@ -9,7 +9,9 @@ $(document).ready(function() {
     wavesurferList.push(getEmptyContainer());
     wavesurferList[1].load("/tracks/electric_romeo.mp3");
 
-    $("#addRow").on("click", addTrackRow)
+    $("#addRow").on("click", addTrackRow);
+
+    bindGeneralButtons();
 });
 
 function addTrackRow() {
@@ -30,6 +32,8 @@ function addTrackRow() {
 
     $("#waveContent").append(newRowtag);
     wavesurferList.push(getEmptyContainer());
+
+    bindGeneralButtons();
 }
 
 function getEmptyContainer() {
@@ -47,16 +51,18 @@ function getEmptyContainer() {
     wsInstance.on('ready', function () {
         //wsInstance.play();
 
-        wsInstance.enableDragSelection({});
+        wsInstance.enableDragSelection({
+            color: "rgba(0, 0, 0, 0.2)",
+        });
 
         var length = wsInstance.backend.getDuration();
         var currentTimeLineLength = 0;
-        if (typeof timeline != 'undefined') {
-            currentTimeLineLength = timeline.wavesurfer.backend.getDuration();
+        if (typeof globalTimeline != 'undefined') {
+            currentTimeLineLength = globalTimeline.wavesurfer.backend.getDuration();
         }
         if (wsInstance.backend.getDuration() > currentTimeLineLength) {
-            timeline = Object.create(WaveSurfer.Timeline);
-            timeline.init({
+            globalTimeline = Object.create(WaveSurfer.Timeline);
+            globalTimeline.init({
                 wavesurfer: wsInstance,
                 container: '#waveform-timeline'
             });
@@ -84,4 +90,18 @@ function getEmptyContainer() {
         wsInstance.loadBlob(this.files[0]);
     });
     return wsInstance
+}
+
+function bindGeneralButtons() {
+    $("#play").click(function() {
+        for (var i = 0; i < wavesurferList.length; i++) {
+            wavesurferList[i].playPause();
+        }
+    });
+
+    $("#stop").click(function() {
+        for (var i = 0; i < wavesurferList.length; i++) {
+            wavesurferList[i].stop(0);
+        }
+    });
 }

@@ -640,6 +640,12 @@ var WaveSurfer = {
         this.backend.destroy();
         this.drawer.destroy();
         this.isDestroyed = true;
+    },
+
+    adjustProgress: function(progress) {
+        var time = progress * maxTrackLength;
+        var newProgress = time / this.backend.getDuration();
+        return newProgress;
     }
 };
 
@@ -1577,6 +1583,7 @@ WaveSurfer.Drawer = {
         this.setupWrapperEvents();
     },
 
+    /* return position of event against to track duration */
     handleEvent: function (e, noPrevent) {
         !noPrevent && e.preventDefault();
 
@@ -1597,7 +1604,6 @@ WaveSurfer.Drawer = {
         } else {
             progress = ((clientX - bbox.left + this.wrapper.scrollLeft) / this.wrapper.scrollWidth) || 0;
         }
-
         return progress;
     },
 
