@@ -19,8 +19,8 @@ function addTrackRow() {
             <div id="waveRow${waveformNum}">
                 <div>
                     <input type="file" id="upload${waveformNum}" accept = "audio/*"/> 
-                    <button id="play${waveformNum}"> 재생/일시정지 </button>
-                    <button id="stop${waveformNum}"> 정지 </button>
+                    <!-- <button id="play${waveformNum}"> 재생/일시정지 </button>
+                    <button id="stop${waveformNum}"> 정지 </button> -->
                     <button id="download${waveformNum}"> 다운로드 </button>
                 </div>
             </div>
