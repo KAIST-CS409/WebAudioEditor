@@ -79,7 +79,7 @@ WaveSurfer.Regions = {
 
             drag = true;
             start = my.wavesurfer.drawer.handleEvent(e, true);
-            start = my.wavesurfer.adjustProgress(start);
+            //start = my.wavesurfer.adjustProgress(start);
 
             //my.clearAll();
             my.clearGlobal();
@@ -87,11 +87,11 @@ WaveSurfer.Regions = {
             region = null;
             region = my.add(params || {});
 
-            var duration = my.wavesurfer.getDuration();
+            //var duration = my.wavesurfer.getDuration();
             //console.log(Math.max(start * duration + 0.3, start * duration) - Math.min(start * duration + 0.3, start * duration));
             region.update({
-                start: Math.min(start * duration + 0.3, start * duration),
-                end: Math.max(start * duration + 0.3, start * duration)
+                start: Math.min(start * maxTrackLength + 0.3, start * maxTrackLength),
+                end: Math.max(start * maxTrackLength + 0.3, start * maxTrackLength)
             });
         };
         this.wrapper.addEventListener('mousedown', eventDown);
@@ -132,13 +132,13 @@ WaveSurfer.Regions = {
                 region = my.add(params || {});
             }
 
-            var duration = my.wavesurfer.getDuration();
+            //var duration = my.wavesurfer.getDuration();
             var end = my.wavesurfer.drawer.handleEvent(e);
-            end = my.wavesurfer.adjustProgress(end);
+            //end = my.wavesurfer.adjustProgress(end);
 
             region.update({
-                start: Math.min(end * duration, start * duration),
-                end: Math.max(end * duration, start * duration)
+                start: Math.min(end * maxTrackLength, start * maxTrackLength),
+                end: Math.max(end * maxTrackLength, start * maxTrackLength)
             });
 
             //my.resetPlayBar();
@@ -341,6 +341,9 @@ WaveSurfer.Region = {
             var left = Math.round(this.start / dur * width);
             var regionWidth =
                 Math.round(this.end / dur * width) - left;
+            if (this.end - this.start < 0.5) {
+            	regionWidth = 2;
+            }
 
             this.style(this.element, {
                 left: left + 'px',
@@ -433,8 +436,7 @@ WaveSurfer.Region = {
                 touchId = e.targetTouches ? e.targetTouches[0].identifier : null;
 
                 e.stopPropagation();
-                startTime = my.wavesurfer.drawer.handleEvent(e, true) * duration;
-                my.wavesurfer.adjustProgress(startTime);
+                startTime = my.wavesurfer.drawer.handleEvent(e, true) * maxTrackLength;
 
                 if (e.target.tagName.toLowerCase() == 'handle') {
                     if (e.target.classList.contains('wavesurfer-handle-start')) {
@@ -463,8 +465,8 @@ WaveSurfer.Region = {
                 if (e.targetTouches && e.targetTouches[0].identifier != touchId) { return; }
 
                 if (drag || resize) {
-                    var time = my.wavesurfer.drawer.handleEvent(e) * duration;
-                    time = my.wavesurfer.adjustProgress(time);
+                    var time = my.wavesurfer.drawer.handleEvent(e) * maxTrackLength;
+                    //time = my.wavesurfer.adjustProgress(time);
                     var delta = time - startTime;
                     startTime = time;
 
