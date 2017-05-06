@@ -27,3 +27,13 @@ input[type=file] {
     font-size: 12px;
     display:none;
 }
+
+.vertical-align-center {
+    display: flex;
+    align-items: center;
+}
+
+.vertical-align-bottom {
+    display: flex;
+    align-items: flex-end;
+}

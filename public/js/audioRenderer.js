@@ -4,10 +4,12 @@ var globalTimeline = null;
 var globalRegion = null;
 
 $(document).ready(function() {
+    
     wavesurferList.push(getEmptyContainer());
     wavesurferList[0].load("/tracks/Inuyasha_dalmyo.mp3");
     wavesurferList.push(getEmptyContainer());
     wavesurferList[1].load("/tracks/lady_brown.mp3");
+
 
     $("#addRow").on("click", addTrackRow);
 });
@@ -17,7 +19,7 @@ function addTrackRow() {
     var newRowtag = `
         <div class="row">
             <div class="col-md-2">
-                <div class="row">
+                <div class="row vertical-align-center">
                     <div class="col-md-4">
                         <span class="track-name"> Track${waveformNum} </span>
                     </div>
@@ -25,7 +27,7 @@ function addTrackRow() {
                         <input id="mute${waveformNum}" type="checkbox" checked data-toggle="toggle" data-size="small">
                     </div>
                 </div>
-                <div class="row">
+                <div class="row vertical-align-center">
                     <div class="col-md-2">
                         <span class="glyphicon glyphicon-volume-up"></span>
                     </div>
