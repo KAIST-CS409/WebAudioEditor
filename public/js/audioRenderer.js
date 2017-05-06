@@ -49,7 +49,9 @@ function addTrackRow() {
         </div>
     `
 
+
     $("#waveContent").append(newRowtag);
+    $("#mute" + waveformNum).bootstrapToggle();
     wavesurferList.push(getEmptyContainer());
 }
 
