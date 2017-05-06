@@ -4,12 +4,10 @@ var globalTimeline = null;
 var globalRegion = null;
 
 $(document).ready(function() {
-    
     wavesurferList.push(getEmptyContainer());
     wavesurferList[0].load("/tracks/Inuyasha_dalmyo.mp3");
     wavesurferList.push(getEmptyContainer());
     wavesurferList[1].load("/tracks/lady_brown.mp3");
-
 
     $("#addRow").on("click", addTrackRow);
 });
