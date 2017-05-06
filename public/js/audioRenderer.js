@@ -44,7 +44,9 @@ function addTrackRow() {
                     </div>
                 </div> 
             </div>
-            <div id="waveRow${waveformNum}" class="col-md-10">
+            <div class="col-md-10">
+                <div id="waveRow${waveformNum}">
+                </div>
             </div>
         </div>
     `

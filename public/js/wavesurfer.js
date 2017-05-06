@@ -357,7 +357,6 @@ var WaveSurfer = {
             } else {
                 width = Math.round(parentWidth * (this.getDuration() / maxTrackLength));
             }
-            
             start = 0;
             end = width;
         }
