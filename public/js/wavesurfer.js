@@ -156,11 +156,14 @@ var WaveSurfer = {
 
         this.backend.on('audioprocess', function (time) {
             for (var i = 0; i < wavesurferList.length; i++) {
-                var progress = time / wavesurferList[i].backend.getDuration();
-                wavesurferList[i].drawer.progress(progress);
+            	if (my == wavesurferList[i]) {
+            		my.drawer.progress(my.backend.getPlayedPercents());
+	                //var progress = time / wavesurferList[i].backend.getDuration();
+	                //wavesurferList[i].drawer.progress(progress);
+            	} else {
+            		wavesurferList[i].drawer.updateProgress(my.drawer.progressWave.offsetWidth);
+            	}
             }
-
-            //my.drawer.progress(my.backend.getPlayedPercents());
             my.fireEvent('audioprocess', time);
         });
     },
