@@ -1,51 +1,152 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="../../favicon.ico">
+
+
         <title><%= title %></title>
         <link rel='stylesheet' href='/css/style.css' />
+        <link rel='stylesheet' href='/dist/css/bootstrap.min.css'/>
+        <link rel='stylesheet' href='/dist/css/bootstrap-toggle.min.css'/>
+
     </head>
     <body>
-        <h1><%= title %></h1>
-        <div id="waveContent">
-            <div>
-                <button id="mute" style="height:30px"> Mute All </button>
-                <button id="play" style="height:30px"> 재생/일시정지 </button>
-                <button id="stop" style="height:30px"> 정지 </button>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#"><%= title %></a>
             </div>
-            <br/>
-            <div id="waveform-timeline"></div>
-            <div>
-                <div id="waveRow0">
-                    <div>
-                        <button id="mute0"> Mute </button>
-                        <input type="range" id="volume0" min="0" max="100" value="50"/>
-                        <input type="file" id="upload0" accept = "audio/*"/> 
-                        <!-- <button id="play0"> 재생/일시정지 </button>
-                        <button id="stop0"> 정지 </button> -->
-                        <button id="download0"> 다운로드 </button>
+            <div id="navbar" class="collapse navbar-collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Workspace</a></li>
+                <li><a href="#">Library</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div id="waveContent" class="waveform-body" >
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button id="play" class="btn btn-sm btn-default">
+                                    <span class="glyphicon glyphicon-play"></span>
+                                </button>
+                                <button id="pause" class="btn btn-sm btn-default">
+                                    <span class="glyphicon glyphicon-pause"></span>
+                                </button>
+                                <button id="stop" class="btn btn-sm btn-default">
+                                    <span class="glyphicon glyphicon-stop"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="mute" class="btn-group btn-toggle col-md-12"> 
+                                <button id="mute_on" class="btn btn-sm btn-primary">ALL ON</button>
+                                <button id="mute_off" class="btn btn-sm btn-default">ALL OFF</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br/>
+                    <div id="waveform-timeline" class="col-md-10">
                     </div>
                 </div>
-                <!-- <div id="waveform-timeline0"></div> -->
+
+                <br/>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span class="track-name"> Track0 </span>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="mute0" type="checkbox" checked data-toggle="toggle" data-size="small">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span class="glyphicon glyphicon-volume-up"></span>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="range" id="volume0" min="0" max="100" value="50"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="file" id="upload0" accept = "audio/*"/> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button id="download0" class="btn btn-sm btn-default"> 다운로드 </button>
+                            </div>
+                        </div> 
+                    </div>
+                    <div id="waveRow0" class="col-md-10">
+                    </div>
+                </div>
+
+               <div class="row">
+                    <div class="col-md-2">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span class="track-name"> Track1 </span>
+                            </div>
+                            <div class="col-md-4">
+                                <input id="mute1" type="checkbox" checked data-toggle="toggle" data-size="small">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span class="glyphicon glyphicon-volume-up"></span>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="range" id="volume1" min="0" max="100" value="50"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="file" id="upload1" accept = "audio/*"/> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button id="download1" class="btn btn-sm btn-default"> 다운로드 </button>
+                            </div>
+                        </div> 
+                    </div>
+                    <div id="waveRow1" class="col-md-10">
+                    </div>
+                </div>
             </div>
 
-            <div>
-                <div id="waveRow1">
-                    <div>
-                        <button id="mute1"> Mute </button>
-                        <input type="range" id="volume1" min="0" max="100" value="50"/>
-                        <input type="file" id="upload1" accept = "audio/*"/> 
-                        <!-- <button id="play1"> 재생/일시정지 </button>
-                        <button id="stop1"> 정지 </button> -->
-                        <button id="download1"> 다운로드 </button>
-                    </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button id="addRow" style="height:100px; width:100%"> 트랙 추가</button>
                 </div>
-                <!-- <div id="waveform-timeline1"></div> -->
             </div>
         </div>
 
-        <button id="addRow" style="height:100px; width:100%"> 트랙 추가</button>
+        
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"> </script>
+        <script src="/dist/js/bootstrap.min.js"></script>
+        <script src="/dist/js/bootstrap-toggle.min.js"></script>
         <script src="/js/wavesurfer.js"></script>
         <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.3.2/wavesurfer.min.js"></script> -->
         <script src="/js/wavesurfer.timeline.js"></script>

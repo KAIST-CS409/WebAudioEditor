@@ -1,8 +1,29 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 10px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+.waveform-body {
+    padding-top: 30px;
+}
+
+.row {
+	margin: 5px;
+}
+
+.track-name {
+	font-size: 20px;
+}
+
+input[type=file] {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width:100%;
+    font-size: 12px;
+    display:none;
 }
