@@ -15,20 +15,45 @@ $(document).ready(function() {
 function addTrackRow() {
     var waveformNum = wavesurferList.length;
     var newRowtag = `
-        <div>
-            <div id="waveRow${waveformNum}">
-                <div>
-                    <input type="file" id="upload${waveformNum}" accept = "audio/*"/> 
-                    <!-- <button id="play${waveformNum}"> 재생/일시정지 </button>
-                    <button id="stop${waveformNum}"> 정지 </button> -->
-                    <button id="download${waveformNum}"> 다운로드 </button>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="row vertical-align-center">
+                    <div class="col-md-4">
+                        <span class="track-name"> Track${waveformNum} </span>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="mute${waveformNum}" type="checkbox" checked data-toggle="toggle" data-size="small">
+                    </div>
+                </div>
+                <div class="row vertical-align-center">
+                    <div class="col-md-2">
+                        <span class="glyphicon glyphicon-volume-up"></span>
+                    </div>
+                    <div class="col-md-10">
+                        <input type="range" id="volume${waveformNum}" min="0" max="100" value="50"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="file" id="upload${waveformNum}" accept = "audio/*"/> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button id="download${waveformNum}" class="btn btn-sm btn-default"> 다운로드 </button>
+                    </div>
+                </div> 
+            </div>
+            <div class="col-md-10">
+                <div id="waveRow${waveformNum}">
                 </div>
             </div>
-            <!--<div id="waveform-timeline${waveformNum}"></div> -->
         </div>
     `
 
+
     $("#waveContent").append(newRowtag);
+    $("#mute" + waveformNum).bootstrapToggle();
     wavesurferList.push(getEmptyContainer());
 }
 
@@ -70,8 +95,12 @@ function getEmptyContainer() {
                 }
             }
         }
+
+        wsInstance.setVolume(0.5);
+
         bindGeneralButtons();
     });
+    /*
     $("#play" + waveformNum).click(function() {
         wsInstance.playPause();
     });
@@ -79,12 +108,28 @@ function getEmptyContainer() {
     $("#stop" + waveformNum).click(function() {
         wsInstance.stop();
     });
+    */
     $("#download" + waveformNum).click(function() {
         saveToWav(wsInstance.backend.buffer);
     });
     $("#upload" + waveformNum).change(function() {
         wsInstance.loadBlob(this.files[0]);
     });
+
+    $("#volume" + waveformNum).on("input", (function() {
+        wsInstance.setVolume(this.value / 100.0);
+    }));
+
+    /*
+    $("#mute" + waveformNum).click(function() {
+        wsInstance.toggleMute();
+    });
+    */
+
+    $("#mute" + waveformNum).change(function() {
+        wsInstance.toggleMute();
+    });
+
     return wsInstance
 }
 
@@ -92,7 +137,14 @@ function bindGeneralButtons() {
     $("#play").unbind("click");
     $("#play").click(function() {
         for (var i = 0; i < wavesurferList.length; i++) {
-            wavesurferList[i].playPause();
+            wavesurferList[i].play();
+        }
+    });
+
+    $("#pause").unbind("click");
+    $("#pause").click(function() {
+        for (var i = 0; i < wavesurferList.length; i++) {
+            wavesurferList[i].pause();
         }
     });
 
@@ -100,6 +152,23 @@ function bindGeneralButtons() {
     $("#stop").click(function() {
         for (var i = 0; i < wavesurferList.length; i++) {
             wavesurferList[i].stop(0);
+        }
+    });
+
+    
+    $("#mute_on").unbind("click");
+    $("#mute_on").click(function() {
+        for (var i = 0; i < wavesurferList.length; i++) {
+            $("#mute" + i).bootstrapToggle('on')
+            wavesurferList[i].setMute(false);
+        }
+    });
+
+    $("#mute_off").unbind("click");
+    $("#mute_off").click(function() {
+        for (var i = 0; i < wavesurferList.length; i++) {
+            $("#mute" + i).bootstrapToggle('off')
+            wavesurferList[i].setMute(true);
         }
     });
 }
