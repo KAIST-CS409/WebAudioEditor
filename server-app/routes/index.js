@@ -1,21 +1,29 @@
-module.exports = function(app, Book)
+module.exports = function(app, fs, Grid, conn, mongoose)
 {
-    app.get('/api/books', function(req, res){
+    app.get('/api/download', function(req, res){
         res.end();
     });
 
-    app.post('/api/books', function(req, res){
-        var book = new Book();
-        book.title = req.body.name;
-        book.author = req.body.author;
-        book.published_date = new Date(req.body.published_date);
-        book.save(function(err){
-            if(err){
-                console.error(err);
-                res.json({result: 0});
-                return;
-            }
-            res.json({result:1});
+    app.post('/api/upload', function(req, res){
+        var gfs = Grid(conn.db, mongoose.mongo);
+
+        var writestream = gfs.createWriteStream({
+            filename: req.body.filename
         });
+        fs.createReadStream(req.body.file).pipe(writestream);
+
+        writestream.on('error', function (err) {
+            console.log('An error occurred!', err);
+            return;
+        });
+
+        writestream.on('close', function (file) {
+            console.log(file.filename + 'Written To DB');
+            res.json({result: 1});
+            return;
+        });
+
+
+
     });
 }

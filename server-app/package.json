@@ -12,7 +12,8 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
+    "gridfs": "^1.0.0",
     "gridfs-stream": "^1.1.1",
-    "mongoose": "^4.9.7"
+    "mongoose": "^4.9.8"
   }
 }
