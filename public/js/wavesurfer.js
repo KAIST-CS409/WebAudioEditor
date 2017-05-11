@@ -115,8 +115,6 @@ var WaveSurfer = {
             my.seekTo(progress);
         }
         */
-        
-        
 
         this.drawer.on('mousedown', function (e, progress) {
             //my.moveFunctionBar(progress);

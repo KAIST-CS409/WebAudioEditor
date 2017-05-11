@@ -130,6 +130,65 @@ function getEmptyContainer() {
         wsInstance.toggleMute();
     });
 
+    // Fade in and Fade out has four modes, but in this project, only use linear.
+    // Four modes = SCURVE, LINEAR, EXPONENTIAL, LOGARITHMIC
+    // Reference : naomiaro/fade-maker
+    // Link : https://github.com/naomiaro/fade-maker
+    $("#fadein" + waveformNum).click(function() {
+        // To cover unselected case
+        var s = 0;
+        var e = wsInstance.getDuration();
+        // Getting range [s ~ e]
+        var a = wsInstance.regions.list;
+        var key = Object.keys(a);
+        for (i = 0; i < key.length; i++) {
+            s = a[key[i]].start;
+            e = a[key[i]].end;
+        }
+        // Fade in part
+        var sr = wsInstance.backend.buffer.sampleRate;
+        var ch = wsInstance.backend.buffer.numberOfChannels;
+        var ssr = parseInt(s * sr);
+        var esr = parseInt(e * sr);
+        var lsr = esr - ssr;
+        for (var i = 0; i < ch; i++){
+            var buf = wsInstance.backend.buffer.getChannelData(i);
+            for (var t = ssr; t < esr; t++){
+                buf[t] *= (t - ssr) / lsr;
+            }
+        }
+        wsInstance.drawer.fireEvent("redraw");
+    });
+    $("#fadeout" + waveformNum).click(function() {
+        // To cover unselected case
+        var s = 0;
+        var e = wsInstance.getDuration();
+        // Getting range [s ~ e]
+        var a = wsInstance.regions.list;
+        var key = Object.keys(a);
+        for (i = 0; i < key.length; i++) {
+            s = a[key[i]].start;
+            e = a[key[i]].end;
+        }
+        // Fade in part
+        var sr = wsInstance.backend.buffer.sampleRate;
+        var ch = wsInstance.backend.buffer.numberOfChannels;
+        var ssr = parseInt(s * sr);
+        var esr = parseInt(e * sr);
+        var lsr = esr - ssr;
+        for (var i = 0; i < ch; i++){
+            var buf = wsInstance.backend.buffer.getChannelData(i);
+            for (var t = ssr; t < esr; t++){
+                buf[t] *= (esr - t) / lsr;
+            }
+        }
+        wsInstance.drawer.fireEvent("redraw");
+    });
+    $("#reverse" + waveformNum).click(function() {
+        window.alert("Reverse clicked");
+        // TODO : FADE-IN
+    });
+
     return wsInstance
 }
 
