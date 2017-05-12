@@ -522,6 +522,7 @@ export default class WaveSurfer extends util.Observer {
         }
 
         this.drawer.on('redraw', () => {
+            this.drawer.clearWave();
             this.drawBuffer();
             this.drawer.progress(this.backend.getPlayedPercents());
         });
