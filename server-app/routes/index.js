@@ -1,29 +1,26 @@
-module.exports = function(app, fs, Grid, conn, mongoose)
+var formidable = require('formidable');
+var fs = require('fs');
+var grid = require('gridfs-stream');
+
+module.exports = function(app, mongoose, conn)
 {
-    app.get('/api/download', function(req, res){
-        res.end();
+    app.post('/api/uploadAudio', function (req, res) {
+        var form = new formidable.IncomingForm();
+        form.parse(req, function (err, fields, files) {
+            if (!err) {
+                console.log('Files Uploaded: ' + files.file)
+                grid.mongo = mongoose.mongo;
+                var gfs = grid(conn.db);
+                var writestream = gfs.createWriteStream({
+                    filename: files.file.name
+                });
+                fs.createReadStream(files.file.path).pipe(writestream);
+            }
+        });
+        form.on('end', function () {
+            res.send('Completed ... go check fs.files & fs.chunks in mongodb');
+        });
     });
-
-    app.post('/api/upload', function(req, res){
-        var gfs = Grid(conn.db, mongoose.mongo);
-
-        var writestream = gfs.createWriteStream({
-            filename: req.body.filename
-        });
-        fs.createReadStream(req.body.file).pipe(writestream);
-
-        writestream.on('error', function (err) {
-            console.log('An error occurred!', err);
-            return;
-        });
-
-        writestream.on('close', function (file) {
-            console.log(file.filename + 'Written To DB');
-            res.json({result: 1});
-            return;
-        });
-
-
-
+    app.get('/api/downloadAudio', function (req, res) {
     });
 }
