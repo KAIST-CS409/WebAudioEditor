@@ -152,7 +152,8 @@ class Region {
 
     /* Update element's position, width, color. */
     updateRender(pxPerSec) {
-        const dur = this.wavesurfer.getDuration();
+        //const dur = this.wavesurfer.getDuration();
+        const dur = this.wavesurfer.getMaxTrackLength();
         let width;
         if (pxPerSec) {
             width = Math.round(this.wavesurfer.getDuration() * pxPerSec);
@@ -188,7 +189,7 @@ class Region {
                 left: left + 'px',
                 width: regionWidth + 'px',
                 backgroundColor: this.color,
-                cursor: this.drag ? 'move' : 'default'
+                //cursor: this.drag ? 'move' : 'default'
             });
 
             for (const attrname in this.attributes) {
@@ -261,6 +262,7 @@ class Region {
         /* Drag or resize on mousemove. */
         (this.drag || this.resize) && (() => {
             const duration = this.wavesurfer.getDuration();
+            const maxTrackLength = this.wavesurfer.getMaxTrackLength();
             let startTime;
             let touchId;
             let drag;
@@ -271,7 +273,7 @@ class Region {
                 touchId = e.targetTouches ? e.targetTouches[0].identifier : null;
 
                 e.stopPropagation();
-                startTime = this.wavesurfer.drawer.handleEvent(e, true) * duration;
+                startTime = this.wavesurfer.drawer.handleEvent(e, true) * maxTrackLength;
 
                 if (e.target.tagName.toLowerCase() == 'handle') {
                     if (e.target.classList.contains('wavesurfer-handle-start')) {
@@ -300,7 +302,7 @@ class Region {
                 if (e.targetTouches && e.targetTouches[0].identifier != touchId) { return; }
 
                 if (drag || resize) {
-                    const time = this.wavesurfer.drawer.handleEvent(e) * duration;
+                    const time = this.wavesurfer.drawer.handleEvent(e) * maxTrackLength;
                     const delta = time - startTime;
                     startTime = time;
 
@@ -538,6 +540,7 @@ export default class RegionsPlugin {
         let region;
         let touchId;
         let pxMove = 0;
+        let maxTrackLength;
 
         const eventDown = e => {
             if (e.touches && e.touches.length > 1) { return; }
@@ -545,13 +548,14 @@ export default class RegionsPlugin {
 
             drag = true;
             start = this.wavesurfer.drawer.handleEvent(e, true);
+            maxTrackLength = this.wavesurfer.getMaxTrackLength();
             region = null;
             region = this.add(params || {});
-            const duration = this.wavesurfer.getDuration();
-            const width = 0.3 * duration / this.wavesurfer.getMaxTrackLength();
+            //const duration = this.wavesurfer.getDuration();
+            const width = 0.3;
             region.update({
-                start: Math.min(start * duration + width, start * duration),
-                end: Math.max(start * duration + width, start * duration)
+                start: Math.min(start * maxTrackLength + width, start * maxTrackLength),
+                end: Math.max(start * maxTrackLength + width, start * maxTrackLength)
             });
         };
         this.wrapper.addEventListener('mousedown', eventDown);
@@ -592,11 +596,11 @@ export default class RegionsPlugin {
                 region = this.add(params || {});
             }
 
-            const duration = this.wavesurfer.getDuration();
+            //const duration = this.wavesurfer.getDuration();
             const end = this.wavesurfer.drawer.handleEvent(e);
             region.update({
-                start: Math.min(end * duration, start * duration),
-                end: Math.max(end * duration, start * duration)
+                start: Math.min(end * maxTrackLength, start * maxTrackLength),
+                end: Math.max(end * maxTrackLength, start * maxTrackLength)
             });
         };
         this.wrapper.addEventListener('mousemove', eventMove);
