@@ -42,3 +42,10 @@ jspm_packages
 #.swp
 *.swp
 
+# Ignore local folder
+wavesurferES6
+
+# Ignore bundle files
+bundle.js
+bundle.js.map
+
