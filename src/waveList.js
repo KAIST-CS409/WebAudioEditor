@@ -196,7 +196,7 @@ export default class WaveList {
                 this.wavesurfers[i].setMute(true);
             }
         }.bind(this));
-        
+
         $("#trim").unbind("click");
         $("#trim").click(function() {
             if (this.currentRegionInfo != null) {
@@ -217,6 +217,7 @@ export default class WaveList {
                 
                 let blob = fileDownloader.saveToWav(selectedTrackBuffer, 
                     startPositionInBuffer, endPositionInBuffer, true, this.wavesurfers[this.currentRegionInfo.id]);
+                this.currentRegionInfo.region.remove();
             }
             else {
                 // ERROR: User must specify trim region.
