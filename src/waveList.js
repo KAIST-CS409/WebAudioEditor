@@ -196,6 +196,7 @@ export default class WaveList {
                 this.wavesurfers[i].setMute(true);
             }
         }.bind(this));
+        
         $("#trim").unbind("click");
         $("#trim").click(function() {
             if (this.currentRegionInfo != null) {
