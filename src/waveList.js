@@ -194,29 +194,107 @@ export default class WaveList {
             }
         }.bind(this));
 
-        $("#trim").unbind("click");
-        $("#trim").click(function() {
+        $("#fade_in").unbind("click");
+        $("#fade_in").click(function() {
             if (this.currentRegionInfo != null) {
-                console.log(this.wavesurfers[this.currentRegionInfo.id].backend.buffer)
-                console.log(this.currentRegionInfo.region.start)
-                console.log(this.currentRegionInfo.region.end)
+                console.log(this.wavesurfers[this.currentRegionInfo.id].backend.buffer);
+                console.log(this.currentRegionInfo.region.start);
+                console.log(this.currentRegionInfo.region.end);
 
                 let selectedRegion = this.currentRegionInfo.region;
                 let selectedTrackBuffer = this.wavesurfers[this.currentRegionInfo.id].backend.buffer;
 
-                let startPositionInSec = selectedRegion.start;
-                let endPositionInSec = selectedRegion.end;
                 let audioLengthInSec = selectedTrackBuffer.duration;
+                let startPositionInSec = selectedRegion.start;
+                let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
 
                 let audioLengthInBuffer = selectedTrackBuffer.length;
-                let startPositionInBuffer = startPositionInSec / audioLengthInSec * audioLengthInBuffer;
-                let endPositionInBuffer = endPositionInSec / audioLengthInSec * audioLengthInBuffer;
-                
-                let blob = fileDownloader.saveToWav(selectedTrackBuffer, 
-                    startPositionInBuffer, endPositionInBuffer, true, this.wavesurfers[this.currentRegionInfo.id]);
-                this.currentRegionInfo.region.remove();
+                let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
+
+                for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
+                    var channelData = selectedTrackBuffer.getChannelData(channelNumber);
+                    for (var cursor = startPositionInBuffer; cursor < endPositionInBuffer; cursor++){
+                        channelData[cursor] *= (cursor - startPositionInBuffer) / regionLengthInBuffer;
+                    }
+                }
+                this.wavesurfers[this.currentRegionInfo.id].drawer.fireEvent("redraw");
             }
             else {
+                window.alert("ERROR : Region not selected for operation [FADE-IN]");
+                // ERROR: User must specify fade-in region.
+                // Show error message to user.
+            }
+        }.bind(this));
+
+        $("#fade_out").unbind("click");
+        $("#fade_out").click(function() {
+            if (this.currentRegionInfo != null) {
+                console.log(this.wavesurfers[this.currentRegionInfo.id].backend.buffer);
+                console.log(this.currentRegionInfo.region.start);
+                console.log(this.currentRegionInfo.region.end);
+
+                let selectedRegion = this.currentRegionInfo.region;
+                let selectedTrackBuffer = this.wavesurfers[this.currentRegionInfo.id].backend.buffer;
+
+                let audioLengthInSec = selectedTrackBuffer.duration;
+                let startPositionInSec = selectedRegion.start;
+                let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
+
+                let audioLengthInBuffer = selectedTrackBuffer.length;
+                let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
+
+                for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
+                    var channelData = selectedTrackBuffer.getChannelData(channelNumber);
+                    for (var cursor = startPositionInBuffer; cursor < endPositionInBuffer; cursor++){
+                        channelData[cursor] *= (endPositionInBuffer - cursor) / regionLengthInBuffer;
+                    }
+                }
+                this.wavesurfers[this.currentRegionInfo.id].drawer.fireEvent("redraw");
+            }
+            else {
+                window.alert("ERROR : Region not selected for operation [FADE-OUT]");
+                // ERROR: User must specify trim region.
+                // Show error message to user.
+            }
+        }.bind(this));
+
+        $("#trim").unbind("click");
+        $("#trim").click(function() {
+            if (this.currentRegionInfo != null) {
+                console.log(this.wavesurfers[this.currentRegionInfo.id].backend.buffer);
+                console.log(this.currentRegionInfo.region.start);
+                console.log(this.currentRegionInfo.region.end);
+
+                let selectedRegion = this.currentRegionInfo.region;
+                let selectedTrackBuffer = this.wavesurfers[this.currentRegionInfo.id].backend.buffer;
+
+                let audioLengthInSec = selectedTrackBuffer.duration;
+                let startPositionInSec = selectedRegion.start;
+                let endPositionInSec = selectedRegion.end;
+
+                if (startPositionInSec >= audioLengthInSec){
+                    window.alert("ERROR : Region is placed on outside of audio. [TRIM]");
+                    // ERROR: Without this management,
+                    // Uncaught (in promise) DOMException: Unable to decode audio data
+                    // UNLESS : Try to make trim in void area.
+                }
+
+                else {
+                    let audioLengthInBuffer = selectedTrackBuffer.length;
+                    let startPositionInBuffer = startPositionInSec / audioLengthInSec * audioLengthInBuffer;
+                    let endPositionInBuffer = endPositionInSec / audioLengthInSec * audioLengthInBuffer;
+                    
+                    let blob = fileDownloader.saveToWav(selectedTrackBuffer, 
+                        startPositionInBuffer, endPositionInBuffer, true, this.wavesurfers[this.currentRegionInfo.id]);
+                    this.currentRegionInfo.region.remove();
+                }
+            }
+            else {
+                window.alert("ERROR : Region not selected for operation. [TRIM]");
                 // ERROR: User must specify trim region.
                 // Show error message to user.
             }
