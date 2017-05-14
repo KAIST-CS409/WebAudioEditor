@@ -3,7 +3,7 @@
 class fileDownloader {
   constructor() {
   }
-  static saveToWav(buffer) {
+  static saveToWav(buffer, startPosition=0, endPosition=buffer.length, isTrim=false, waveSurfer=null) {
     var worker = new Worker('/js/recorderWorker.js');
 
     // initialize the new worker
@@ -20,7 +20,12 @@ class fileDownloader {
       // this is would be your WAV blob
 
       console.log(blob);
-      fileDownloader.forceDownload(blob, "new_audio.wav");
+      if (isTrim) {
+        waveSurfer.loadBlob(blob);
+      }
+      else {
+        fileDownloader.forceDownload(blob, "new_audio.wav");
+      }
     };
 
     // send the channel data from our buffer to the worker
@@ -28,7 +33,7 @@ class fileDownloader {
 
     //Maxiumu number of channels should be 2.
     for (var i = 0; i < buffer.numberOfChannels; i++) {
-      channels.push(buffer.getChannelData(i));
+      channels.push(buffer.getChannelData(i).slice(startPosition, endPosition));
     }
     //console.log(channels);
     worker.postMessage({

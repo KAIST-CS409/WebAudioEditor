@@ -196,6 +196,34 @@ export default class WaveList {
                 this.wavesurfers[i].setMute(true);
             }
         }.bind(this));
+
+        $("#trim").unbind("click");
+        $("#trim").click(function() {
+            if (this.currentRegionInfo != null) {
+                console.log(this.wavesurfers[this.currentRegionInfo.id].backend.buffer)
+                console.log(this.currentRegionInfo.region.start)
+                console.log(this.currentRegionInfo.region.end)
+
+                let selectedRegion = this.currentRegionInfo.region;
+                let selectedTrackBuffer = this.wavesurfers[this.currentRegionInfo.id].backend.buffer;
+
+                let startPositionInSec = selectedRegion.start;
+                let endPositionInSec = selectedRegion.end;
+                let audioLengthInSec = selectedTrackBuffer.duration;
+
+                let audioLengthInBuffer = selectedTrackBuffer.length;
+                let startPositionInBuffer = startPositionInSec / audioLengthInSec * audioLengthInBuffer;
+                let endPositionInBuffer = endPositionInSec / audioLengthInSec * audioLengthInBuffer;
+                
+                let blob = fileDownloader.saveToWav(selectedTrackBuffer, 
+                    startPositionInBuffer, endPositionInBuffer, true, this.wavesurfers[this.currentRegionInfo.id]);
+                this.currentRegionInfo.region.remove();
+            }
+            else {
+                // ERROR: User must specify trim region.
+                // Show error message to user.
+            }
+        }.bind(this));
     }
 
     addNewRegion(waveformNum, region) {
