@@ -120,12 +120,9 @@ export default class WaveList {
             if (length > this.maxTrackLength) {
                 this.maxTrackLength = length;
                 this.timeline.render();
-            }
-            currentTimeLineLength = this.timeline.wavesurfer.backend.getDuration();
-            if (wsInstance.backend.getDuration() > currentTimeLineLength) {
                 for (var i = 0; i < this.wavesurfers.length; i++) {
                     var targetLength = this.wavesurfers[i].backend.getDuration();
-                    if (targetLength != 0) {
+                    if (targetLength != 0) { // targetLength is 0 if backend.buffer is undefined.
                         console.log("redraw!");
                         this.wavesurfers[i].drawer.fireEvent("redraw");
                     }
@@ -196,6 +193,34 @@ export default class WaveList {
                 this.wavesurfers[i].setMute(true);
             }
         }.bind(this));
+
+        $("#trim").unbind("click");
+        $("#trim").click(function() {
+            if (this.currentRegionInfo != null) {
+                console.log(this.wavesurfers[this.currentRegionInfo.id].backend.buffer)
+                console.log(this.currentRegionInfo.region.start)
+                console.log(this.currentRegionInfo.region.end)
+
+                let selectedRegion = this.currentRegionInfo.region;
+                let selectedTrackBuffer = this.wavesurfers[this.currentRegionInfo.id].backend.buffer;
+
+                let startPositionInSec = selectedRegion.start;
+                let endPositionInSec = selectedRegion.end;
+                let audioLengthInSec = selectedTrackBuffer.duration;
+
+                let audioLengthInBuffer = selectedTrackBuffer.length;
+                let startPositionInBuffer = startPositionInSec / audioLengthInSec * audioLengthInBuffer;
+                let endPositionInBuffer = endPositionInSec / audioLengthInSec * audioLengthInBuffer;
+                
+                let blob = fileDownloader.saveToWav(selectedTrackBuffer, 
+                    startPositionInBuffer, endPositionInBuffer, true, this.wavesurfers[this.currentRegionInfo.id]);
+                this.currentRegionInfo.region.remove();
+            }
+            else {
+                // ERROR: User must specify trim region.
+                // Show error message to user.
+            }
+        }.bind(this));
     }
 
     addNewRegion(waveformNum, region) {
@@ -232,7 +257,6 @@ export default class WaveList {
         // Synchronize the movement of wave cursors.
         for (var i = 0; i < this.wavesurfers.length; i++) {
             if (wsInstance == this.wavesurfers[i]) {
-                console.log("hi");
                 wsInstance.drawer.progress(wsInstance.backend.getPlayedPercents());
                 //var progress = time / wavesurferList[i].backend.getDuration();
                 //wavesurferList[i].drawer.progress(progress);
