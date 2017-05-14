@@ -120,12 +120,9 @@ export default class WaveList {
             if (length > this.maxTrackLength) {
                 this.maxTrackLength = length;
                 this.timeline.render();
-            }
-            currentTimeLineLength = this.timeline.wavesurfer.backend.getDuration();
-            if (wsInstance.backend.getDuration() > currentTimeLineLength) {
                 for (var i = 0; i < this.wavesurfers.length; i++) {
                     var targetLength = this.wavesurfers[i].backend.getDuration();
-                    if (targetLength != 0) {
+                    if (targetLength != 0) { // targetLength is 0 if backend.buffer is undefined.
                         console.log("redraw!");
                         this.wavesurfers[i].drawer.fireEvent("redraw");
                     }
@@ -260,7 +257,6 @@ export default class WaveList {
         // Synchronize the movement of wave cursors.
         for (var i = 0; i < this.wavesurfers.length; i++) {
             if (wsInstance == this.wavesurfers[i]) {
-                console.log("hi");
                 wsInstance.drawer.progress(wsInstance.backend.getPlayedPercents());
                 //var progress = time / wavesurferList[i].backend.getDuration();
                 //wavesurferList[i].drawer.progress(progress);
