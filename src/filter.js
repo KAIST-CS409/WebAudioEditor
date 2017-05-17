@@ -1,6 +1,6 @@
-import FileDownloader from 'fileDownloader.js'
+import FileDownloader from 'fileDownloader.js';
 
-export default class FilterPlugin {
+export default class Filter {
 
     constructor() {
 
@@ -20,7 +20,9 @@ export default class FilterPlugin {
             let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
 
             if (startPositionInSec >= audioLengthInSec){
-                FilterPlugin.alertWithSnackbar("ERROR : Region not selected for operation. [Fade in]");
+                Filter.alertWithSnackbar("Error : Region not selected for operation.");
+                // ERROR: User must appropriate region.
+                // Region is out of audio range.
             } else {
                 let audioLengthInBuffer = selectedTrackBuffer.length;
                 let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
@@ -32,8 +34,8 @@ export default class FilterPlugin {
             }
         }
         else {
-            FilterPlugin.alertWithSnackbar("Error : Region not selected for operation. [Fade-in]");
-            // ERROR: User must specify fade-in region.
+            Filter.alertWithSnackbar("Error : Region not selected for operation.");
+            // ERROR: User must specify region.
             // Show error message to user.
         }
     }
@@ -52,7 +54,7 @@ export default class FilterPlugin {
             let endPositionInSec = selectedRegion.end;
 
             if (startPositionInSec >= audioLengthInSec){
-                FilterPlugin.alertWithSnackbar("Error : Region is placed on outside of audio. [Trim]");
+                Filter.alertWithSnackbar("Error : Region is placed on outside of audio. [Trim]");
                 // ERROR: Without this management,
                 // Uncaught (in promise) DOMException: Unable to decode audio data
                 // UNLESS : Try to make trim in void area.
@@ -70,7 +72,7 @@ export default class FilterPlugin {
             }
         }
         else {
-            FilterPlugin.alertWithSnackbar("Error : Region not selected for operation. [Trim]");
+            Filter.alertWithSnackbar("Error : Region not selected for operation. [Trim]");
             // ERROR: User must specify trim region.
             // Show error message to user.
         }
@@ -106,45 +108,14 @@ export default class FilterPlugin {
         }
     }
 
-
-    static reverse(regionInfo, wavesurfers) {
-        if (regionInfo != null) {
-            console.log(wavesurfers[regionInfo.id].backend.buffer);
-            console.log(regionInfo.region.start);
-            console.log(regionInfo.region.end);
-
-            let selectedRegion = regionInfo.region;
-            let selectedTrackBuffer = wavesurfers[regionInfo.id].backend.buffer;
-
-            let audioLengthInSec = selectedTrackBuffer.duration;
-            let startPositionInSec = selectedRegion.start;
-            let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
-
-            if (startPositionInSec >= audioLengthInSec){
-                window.alert("WARNING : Region is placed on outside of audio. [REVERSE]");
-                // Warning Concept
+    static reverse(selectedTrackBuffer, startPositionInBuffer, endPositionInBuffer, params) {
+        let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
+        for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
+            var channelData = selectedTrackBuffer.getChannelData(channelNumber);
+            var cloneChannel = channelData.slice();
+            for (var cursor = 0; cursor < regionLengthInBuffer; cursor++){
+                channelData[startPositionInBuffer + cursor] = cloneChannel[endPositionInBuffer - 1 - cursor];
             }
-
-            else{
-                let audioLengthInBuffer = selectedTrackBuffer.length;
-                let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
-                let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
-                let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
-
-                for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
-                    var channelData = selectedTrackBuffer.getChannelData(channelNumber);
-                    var cloneChannel = channelData.slice();
-                    for (var cursor = 0; cursor < regionLengthInBuffer; cursor++){
-                        channelData[startPositionInBuffer + cursor] = cloneChannel[endPositionInBuffer - 1 - cursor];
-                    }
-                }
-                wavesurfers[regionInfo.id].drawer.fireEvent("redraw");
-            }
-        }
-        else {
-            window.alert("ERROR : Region not selected for operation [REVERSE]");
-            // ERROR: User must specify trim region.
-            // Show error message to user.
         }
     }
 

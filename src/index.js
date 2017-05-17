@@ -1,4 +1,4 @@
-import WaveList from 'waveList.js'
+import WaveList from 'waveList.js';
     
 $(document).ready(function() {
     let waveList = WaveList.create({});
