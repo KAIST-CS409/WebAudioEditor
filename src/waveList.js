@@ -25,6 +25,8 @@ export default class WaveList {
     };
 
     init() {
+        this.removeRegionOnOutsideClick(this);
+        this.bindAddRowButton(this);
         return this;
     };
 
@@ -262,5 +264,25 @@ export default class WaveList {
                 this.wavesurfers[i].drawer.updateProgress(wsInstance.drawer.progressWave.offsetWidth);
             }
         }
+    }
+
+    removeRegionOnOutsideClick(waveList) {
+        $(document).click(function(event) {
+            console.log("Click doc");
+            if(!$(event.target).closest('wave').length) {
+                console.log("delete region");
+                console.log(this.currentRegionInfo);
+                if (this.currentRegionInfo != null) {
+                    this.currentRegionInfo["region"].remove();
+                    this.currentRegionInfo = null;
+                }
+            }
+        }.bind(this))
+    }
+
+    bindAddRowButton(waveList) {
+        $("#addRow").on("click", function() {
+            this.add("#waveContent");
+        }.bind(this));
     }
 }

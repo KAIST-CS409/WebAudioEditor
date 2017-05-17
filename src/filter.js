@@ -34,6 +34,7 @@ export default class FilterPlugin {
                 let blob = FileDownloader.saveToWav(selectedTrackBuffer, 
                     startPositionInBuffer, endPositionInBuffer, true, wavesurfers[regionInfo.id]);
                 regionInfo.region.remove();
+                regionInfo = null;
             }
         }
         else {
