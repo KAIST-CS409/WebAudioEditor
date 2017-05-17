@@ -203,12 +203,16 @@ export default class WaveList {
         $("#fade_out").unbind("click");
         $("#fade_out").click(function() {
             FilterPlugin.fadeOut(this.currentRegionInfo, this.wavesurfers);
-
         }.bind(this));
 
         $("#trim").unbind("click");
         $("#trim").click(function() {
             FilterPlugin.trim(this.currentRegionInfo, this.wavesurfers);
+        }.bind(this));
+
+        $("#reverse").unbind("click");
+        $("#reverse").click(function() {
+            FilterPlugin.reverse(this.currentRegionInfo, this.wavesurfers);
         }.bind(this));
         
         $("#volume").unbind("click");

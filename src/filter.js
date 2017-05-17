@@ -99,18 +99,25 @@ export default class FilterPlugin {
             let startPositionInSec = selectedRegion.start;
             let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
 
-            let audioLengthInBuffer = selectedTrackBuffer.length;
-            let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
-            let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
-            let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
-
-            for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
-                var channelData = selectedTrackBuffer.getChannelData(channelNumber);
-                for (var cursor = startPositionInBuffer; cursor < endPositionInBuffer; cursor++){
-                    channelData[cursor] *= (cursor - startPositionInBuffer) / regionLengthInBuffer;
-                }
+            if (startPositionInSec >= audioLengthInSec){
+                window.alert("WARNING : Region is placed on outside of audio. [FADE-IN]");
+                // Warning
             }
-            wavesurfers[regionInfo.id].drawer.fireEvent("redraw");
+
+            else{
+                let audioLengthInBuffer = selectedTrackBuffer.length;
+                let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
+
+                for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
+                    var channelData = selectedTrackBuffer.getChannelData(channelNumber);
+                    for (var cursor = startPositionInBuffer; cursor < endPositionInBuffer; cursor++){
+                        channelData[cursor] *= (cursor - startPositionInBuffer) / regionLengthInBuffer;
+                    }
+                }
+                wavesurfers[regionInfo.id].drawer.fireEvent("redraw");
+            }
         }
         else {
             window.alert("ERROR : Region not selected for operation [FADE-IN]");
@@ -132,18 +139,25 @@ export default class FilterPlugin {
             let startPositionInSec = selectedRegion.start;
             let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
 
-            let audioLengthInBuffer = selectedTrackBuffer.length;
-            let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
-            let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
-            let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
-
-            for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
-                var channelData = selectedTrackBuffer.getChannelData(channelNumber);
-                for (var cursor = startPositionInBuffer; cursor < endPositionInBuffer; cursor++){
-                    channelData[cursor] *= (endPositionInBuffer - cursor) / regionLengthInBuffer;
-                }
+            if (startPositionInSec >= audioLengthInSec){
+                window.alert("WARNING : Region is placed on outside of audio. [FADE-OUT]");
+                // Warning
             }
-            wavesurfers[regionInfo.id].drawer.fireEvent("redraw");
+            
+            else{
+                let audioLengthInBuffer = selectedTrackBuffer.length;
+                let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
+
+                for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
+                    var channelData = selectedTrackBuffer.getChannelData(channelNumber);
+                    for (var cursor = startPositionInBuffer; cursor < endPositionInBuffer; cursor++){
+                        channelData[cursor] *= (endPositionInBuffer - cursor) / regionLengthInBuffer;
+                    }
+                }
+                wavesurfers[regionInfo.id].drawer.fireEvent("redraw");
+            }
         }
         else {
             window.alert("ERROR : Region not selected for operation [FADE-OUT]");
@@ -152,4 +166,44 @@ export default class FilterPlugin {
         }
     }
 
+    static reverse(regionInfo, wavesurfers) {
+        if (regionInfo != null) {
+            console.log(wavesurfers[regionInfo.id].backend.buffer);
+            console.log(regionInfo.region.start);
+            console.log(regionInfo.region.end);
+
+            let selectedRegion = regionInfo.region;
+            let selectedTrackBuffer = wavesurfers[regionInfo.id].backend.buffer;
+
+            let audioLengthInSec = selectedTrackBuffer.duration;
+            let startPositionInSec = selectedRegion.start;
+            let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
+
+            if (startPositionInSec >= audioLengthInSec){
+                window.alert("WARNING : Region is placed on outside of audio. [REVERSE]");
+                // Warning Concept
+            }
+
+            else{
+                let audioLengthInBuffer = selectedTrackBuffer.length;
+                let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
+
+                for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
+                    var channelData = selectedTrackBuffer.getChannelData(channelNumber);
+                    var cloneChannel = channelData.slice();
+                    for (var cursor = 0; cursor < regionLengthInBuffer; cursor++){
+                        channelData[startPositionInBuffer + cursor] = cloneChannel[endPositionInBuffer - 1 - cursor];
+                    }
+                }
+                wavesurfers[regionInfo.id].drawer.fireEvent("redraw");
+            }
+        }
+        else {
+            window.alert("ERROR : Region not selected for operation [REVERSE]");
+            // ERROR: User must specify trim region.
+            // Show error message to user.
+        }
+    }
 }
