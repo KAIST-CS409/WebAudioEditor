@@ -208,18 +208,25 @@ export default class WaveList {
                 let startPositionInSec = selectedRegion.start;
                 let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
 
-                let audioLengthInBuffer = selectedTrackBuffer.length;
-                let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
-                let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
-                let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
-
-                for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
-                    var channelData = selectedTrackBuffer.getChannelData(channelNumber);
-                    for (var cursor = startPositionInBuffer; cursor < endPositionInBuffer; cursor++){
-                        channelData[cursor] *= (cursor - startPositionInBuffer) / regionLengthInBuffer;
-                    }
+                if (startPositionInSec >= audioLengthInSec){
+                    window.alert("WARNING : Region is placed on outside of audio. [FADE-IN]");
+                    // Warning
                 }
-                this.wavesurfers[this.currentRegionInfo.id].drawer.fireEvent("redraw");
+
+                else{
+                    let audioLengthInBuffer = selectedTrackBuffer.length;
+                    let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                    let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                    let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
+
+                    for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
+                        var channelData = selectedTrackBuffer.getChannelData(channelNumber);
+                        for (var cursor = startPositionInBuffer; cursor < endPositionInBuffer; cursor++){
+                            channelData[cursor] *= (cursor - startPositionInBuffer) / regionLengthInBuffer;
+                        }
+                    }
+                    this.wavesurfers[this.currentRegionInfo.id].drawer.fireEvent("redraw");
+                }
             }
             else {
                 window.alert("ERROR : Region not selected for operation [FADE-IN]");
@@ -242,18 +249,25 @@ export default class WaveList {
                 let startPositionInSec = selectedRegion.start;
                 let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
 
-                let audioLengthInBuffer = selectedTrackBuffer.length;
-                let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
-                let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
-                let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
-
-                for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
-                    var channelData = selectedTrackBuffer.getChannelData(channelNumber);
-                    for (var cursor = startPositionInBuffer; cursor < endPositionInBuffer; cursor++){
-                        channelData[cursor] *= (endPositionInBuffer - cursor) / regionLengthInBuffer;
-                    }
+                if (startPositionInSec >= audioLengthInSec){
+                    window.alert("WARNING : Region is placed on outside of audio. [FADE-OUT]");
+                    // Warning Concept
                 }
-                this.wavesurfers[this.currentRegionInfo.id].drawer.fireEvent("redraw");
+
+                else{
+                    let audioLengthInBuffer = selectedTrackBuffer.length;
+                    let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                    let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                    let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
+
+                    for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
+                        var channelData = selectedTrackBuffer.getChannelData(channelNumber);
+                        for (var cursor = startPositionInBuffer; cursor < endPositionInBuffer; cursor++){
+                            channelData[cursor] *= (endPositionInBuffer - cursor) / regionLengthInBuffer;
+                        }
+                    }
+                    this.wavesurfers[this.currentRegionInfo.id].drawer.fireEvent("redraw");
+                }
             }
             else {
                 window.alert("ERROR : Region not selected for operation [FADE-OUT]");
@@ -295,6 +309,48 @@ export default class WaveList {
             }
             else {
                 window.alert("ERROR : Region not selected for operation. [TRIM]");
+                // ERROR: User must specify trim region.
+                // Show error message to user.
+            }
+        }.bind(this));
+
+        $("#reverse").unbind("click");
+        $("#reverse").click(function() {
+            if (this.currentRegionInfo != null) {
+                console.log(this.wavesurfers[this.currentRegionInfo.id].backend.buffer);
+                console.log(this.currentRegionInfo.region.start);
+                console.log(this.currentRegionInfo.region.end);
+
+                let selectedRegion = this.currentRegionInfo.region;
+                let selectedTrackBuffer = this.wavesurfers[this.currentRegionInfo.id].backend.buffer;
+
+                let audioLengthInSec = selectedTrackBuffer.duration;
+                let startPositionInSec = selectedRegion.start;
+                let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
+
+                if (startPositionInSec >= audioLengthInSec){
+                    window.alert("WARNING : Region is placed on outside of audio. [REVERSE]");
+                    // Warning Concept
+                }
+
+                else{
+                    let audioLengthInBuffer = selectedTrackBuffer.length;
+                    let startPositionInBuffer = parseInt(startPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                    let endPositionInBuffer = parseInt(endPositionInSec / audioLengthInSec * audioLengthInBuffer);
+                    let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
+
+                    for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
+                        var channelData = selectedTrackBuffer.getChannelData(channelNumber);
+                        var cloneChannel = channelData.slice();
+                        for (var cursor = 0; cursor < regionLengthInBuffer; cursor++){
+                            channelData[startPositionInBuffer + cursor] = cloneChannel[endPositionInBuffer - 1 - cursor];
+                        }
+                    }
+                    this.wavesurfers[this.currentRegionInfo.id].drawer.fireEvent("redraw");
+                }
+            }
+            else {
+                window.alert("ERROR : Region not selected for operation [REVERSE]");
                 // ERROR: User must specify trim region.
                 // Show error message to user.
             }
