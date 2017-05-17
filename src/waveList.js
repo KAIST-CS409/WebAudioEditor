@@ -210,6 +210,11 @@ export default class WaveList {
         $("#trim").click(function() {
             FilterPlugin.trim(this.currentRegionInfo, this.wavesurfers);
         }.bind(this));
+        
+        $("#volume").unbind("click");
+        $("#volume").click(function() {
+            FilterPlugin.volume(this.currentRegionInfo, this.wavesurfers);
+        }.bind(this));
     }
 
     addNewRegion(waveformNum, region) {
