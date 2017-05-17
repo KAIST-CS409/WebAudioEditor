@@ -214,6 +214,11 @@ export default class WaveList {
         $("#reverse").click(function() {
             FilterPlugin.reverse(this.currentRegionInfo, this.wavesurfers);
         }.bind(this));
+        
+        $("#volume").unbind("click");
+        $("#volume").click(function() {
+            FilterPlugin.volume(this.currentRegionInfo, this.wavesurfers);
+        }.bind(this));
     }
 
     addNewRegion(waveformNum, region) {
