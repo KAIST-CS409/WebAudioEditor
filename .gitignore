@@ -52,3 +52,6 @@ bundle.js.map
 # .idea
 .idea
 
+# build file
+*/build/*
+

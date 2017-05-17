@@ -1,8 +1,15 @@
+import $ from 'jquery';
+import 'css/style.css';
+import 'dist/css/bootstrap.css';
+import 'dist/css/bootstrap-toggle.css';
+import 'dist/js/bootstrap.min.js';
+import 'dist/js/bootstrap-toggle.min.js';
+
 import WaveSurfer from 'wavesurfer/wavesurfer.js';
 import TimelinePlugin from 'wavesurfer/plugin/timeline.js';
 import RegionPlugin from 'wavesurfer/plugin/regions.js';
-import FileDownloader from 'fileDownloader.js'
-import FilterPlugin from 'filter.js'
+import FileDownloader from 'fileDownloader.js';
+import FilterPlugin from 'filter.js';
 
 export default class WaveList {
     waveformId = 0;

@@ -8,7 +8,7 @@ module.exports = {
     ],
 
     output: {
-        path: path.resolve(__dirname, './public/js'),
+        path: path.resolve(__dirname, './public/build'),
         filename: 'bundle.js'
     },
 
@@ -29,12 +29,13 @@ module.exports = {
             {
                 test: /\.css$/,
                 loader: 'style-loader!css-loader'
-            }
+            },
+            { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
         ]
     },
 
     resolve: {
-        modules: [path.resolve(__dirname, './src'), 'node_modules'],
+        modules: [path.resolve(__dirname, './src'), path.resolve(__dirname, './public'), 'node_modules'],
         extensions: [".js", ".css"],
     },
 
@@ -50,6 +51,10 @@ module.exports = {
           compress:{
             warnings: true
           }
+        }),
+        new webpack.ProvidePlugin({
+            jQuery: 'jquery',
+            $: 'jquery'
         })
     ]
 
