@@ -1,4 +1,4 @@
-import WaveList from 'waveList.js'
+import WaveList from 'waveList.js';
     
 $(document).ready(function() {
     let waveList = WaveList.create({});
@@ -11,8 +11,4 @@ $(document).ready(function() {
     waveList.addWaveForm(1);
     waveList.waveformId++;
     waveList.wavesurfers[1].load("/tracks/lady_brown.mp3");
-
-    $("#addRow").on("click", function() {
-        waveList.add("#waveContent");
-    });
 });
