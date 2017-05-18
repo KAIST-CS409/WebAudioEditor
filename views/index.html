@@ -8,11 +8,7 @@
         <meta name="author" content="">
         <link rel="icon" href="../../favicon.ico">
 
-
         <title><%= title %></title>
-        <link rel='stylesheet' href='/css/style.css'/>
-        <link rel='stylesheet' href='/dist/css/bootstrap.min.css'/>
-        <link rel='stylesheet' href='/dist/css/bootstrap-toggle.min.css'/>
 
         <script src="/dist/js/pace.min.js"></script>
         <link rel="stylesheet" href="/dist/css/pace.css"/>
@@ -33,6 +29,10 @@
               <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Workspace</a></li>
                 <li><a href="#">Library</a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="/signin"><span class="glyphicon glyphicon-log-in"></span> Sign In</a></li>
               </ul>
             </div><!--/.nav-collapse -->
           </div>
@@ -166,11 +166,7 @@
             
         </div>
 
-        <div id="snackbar">Some text some message..</div>
-        
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"> </script>
-        <script src="/dist/js/bootstrap.min.js"></script>
-        <script src="/dist/js/bootstrap-toggle.min.js"></script>
-        <script src="/js/bundle.js"></script>
+        <div id="snackbar"></div>
+        <script src="/build/index.bundle.js"></script>
     </body>
 </html>
