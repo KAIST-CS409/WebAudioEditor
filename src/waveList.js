@@ -1,7 +1,8 @@
 import WaveSurfer from 'wavesurfer/wavesurfer.js';
 import TimelinePlugin from 'wavesurfer/plugin/timeline.js';
 import RegionPlugin from 'wavesurfer/plugin/regions.js';
-import fileDownloader from 'fileDownloader.js'
+import FileDownloader from 'fileDownloader.js'
+import FilterPlugin from 'filter.js'
 
 export default class WaveList {
     waveformId = 0;
@@ -139,7 +140,7 @@ export default class WaveList {
 
     bindLocalButtons(waveformNum, wsInstance) {
         $("#download" + waveformNum).click(function() {
-            fileDownloader.saveToWav(wsInstance.backend.buffer);
+            FileDownloader.saveToWav(wsInstance.backend.buffer);
         });
         $("#upload" + waveformNum).change(function() {
             wsInstance.loadBlob(this.files[0]);
@@ -194,32 +195,29 @@ export default class WaveList {
             }
         }.bind(this));
 
+        $("#fade_in").unbind("click");
+        $("#fade_in").click(function() {
+            FilterPlugin.fadeIn(this.currentRegionInfo, this.wavesurfers);
+        }.bind(this));
+
+        $("#fade_out").unbind("click");
+        $("#fade_out").click(function() {
+            FilterPlugin.fadeOut(this.currentRegionInfo, this.wavesurfers);
+        }.bind(this));
+
         $("#trim").unbind("click");
         $("#trim").click(function() {
-            if (this.currentRegionInfo != null) {
-                console.log(this.wavesurfers[this.currentRegionInfo.id].backend.buffer)
-                console.log(this.currentRegionInfo.region.start)
-                console.log(this.currentRegionInfo.region.end)
+            FilterPlugin.trim(this.currentRegionInfo, this.wavesurfers);
+        }.bind(this));
 
-                let selectedRegion = this.currentRegionInfo.region;
-                let selectedTrackBuffer = this.wavesurfers[this.currentRegionInfo.id].backend.buffer;
-
-                let startPositionInSec = selectedRegion.start;
-                let endPositionInSec = selectedRegion.end;
-                let audioLengthInSec = selectedTrackBuffer.duration;
-
-                let audioLengthInBuffer = selectedTrackBuffer.length;
-                let startPositionInBuffer = startPositionInSec / audioLengthInSec * audioLengthInBuffer;
-                let endPositionInBuffer = endPositionInSec / audioLengthInSec * audioLengthInBuffer;
-                
-                let blob = fileDownloader.saveToWav(selectedTrackBuffer, 
-                    startPositionInBuffer, endPositionInBuffer, true, this.wavesurfers[this.currentRegionInfo.id]);
-                this.currentRegionInfo.region.remove();
-            }
-            else {
-                // ERROR: User must specify trim region.
-                // Show error message to user.
-            }
+        $("#reverse").unbind("click");
+        $("#reverse").click(function() {
+            FilterPlugin.reverse(this.currentRegionInfo, this.wavesurfers);
+        }.bind(this));
+        
+        $("#volume").unbind("click");
+        $("#volume").click(function() {
+            FilterPlugin.volume(this.currentRegionInfo, this.wavesurfers);
         }.bind(this));
     }
 
