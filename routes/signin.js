@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Web Audio Editor' });
+    res.render('signin', { title: 'Web Audio Editor - Sign in' });
 });
 
 module.exports = router;

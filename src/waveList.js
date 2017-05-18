@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import 'css/style.css';
 import 'dist/css/bootstrap.css';
 import 'dist/css/bootstrap-toggle.css';
 import 'dist/js/bootstrap.min.js';

@@ -3,13 +3,15 @@ var webpack = require('webpack');
 
 module.exports = {
     context: __dirname,
-    entry: [
-        './src/index.js',
-    ],
+    entry: {
+        index: './src/index.js',
+        signin: './src/signin.js',
+        signup: './src/signup.js'
+    },
 
     output: {
         path: path.resolve(__dirname, './public/build'),
-        filename: 'bundle.js'
+        filename: '[name].bundle.js'
     },
 
     module: {

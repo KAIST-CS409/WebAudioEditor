@@ -46,8 +46,8 @@ jspm_packages
 wavesurferES6
 
 # Ignore bundle files
-bundle.js
-bundle.js.map
+*bundle.js
+*bundle.js.map
 
 # .idea
 .idea
