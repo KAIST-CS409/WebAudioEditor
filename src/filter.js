@@ -54,7 +54,7 @@ export default class Filter {
             let endPositionInSec = selectedRegion.end;
 
             if (startPositionInSec >= audioLengthInSec){
-                Filter.alertWithSnackbar("Error : Region is placed on outside of audio. [Trim]");
+                Filter.alertWithSnackbar("Error : Region is placed on outside of audio.");
                 // ERROR: Without this management,
                 // Uncaught (in promise) DOMException: Unable to decode audio data
                 // UNLESS : Try to make trim in void area.
@@ -72,7 +72,7 @@ export default class Filter {
             }
         }
         else {
-            Filter.alertWithSnackbar("Error : Region not selected for operation. [Trim]");
+            Filter.alertWithSnackbar("Error : Region not selected for operation.");
             // ERROR: User must specify trim region.
             // Show error message to user.
         }
