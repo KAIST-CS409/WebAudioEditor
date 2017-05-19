@@ -41,7 +41,7 @@ module.exports = {
         extensions: [".js", ".css"],
     },
 
-    devtool: 'source-map',
+    devtool: 'cheap-module-source-map',
     plugins:[
         new webpack.DefinePlugin({
           'process.env':{
