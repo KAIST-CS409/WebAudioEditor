@@ -230,7 +230,9 @@ export default class WaveList {
 
         $("#pitch").unbind("click");
         $("#pitch").click(function() {
-            FilterPlugin.pitch(this.currentRegionInfo, this.wavesurfers);
+            let pitchChangeValue = $("#pitch-key").val();
+            let params = {"pitch": pitchChangeValue};
+            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.pitch, params);
         }.bind(this));
     }
 

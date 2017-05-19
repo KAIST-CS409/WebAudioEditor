@@ -1,4 +1,5 @@
 import FileDownloader from 'fileDownloader.js';
+import Shifter from 'smbPitchShift.js';
 
 export default class Filter {
 
@@ -116,6 +117,17 @@ export default class Filter {
             for (var cursor = 0; cursor < regionLengthInBuffer; cursor++){
                 channelData[startPositionInBuffer + cursor] = cloneChannel[endPositionInBuffer - 1 - cursor];
             }
+        }
+    }
+
+
+    static pitch(selectedTrackBuffer, startPositionInBuffer, endPositionInBuffer, params) {
+        let pitchKeyChange = params["pitch"];
+        let singleKeyChange = Math.pow(2.0, 1.0/12);
+        let pitchRatio = Math.pow(singleKeyChange, pitchKeyChange);
+        for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++){
+            var channelData = selectedTrackBuffer.getChannelData(channelNumber);
+            Shifter.shift(pitchRatio, selectedTrackBuffer.sampleRate, channelData);
         }
     }
 

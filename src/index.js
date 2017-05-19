@@ -1,5 +1,6 @@
 import WaveList from 'waveList.js';
-    
+
+
 $(document).ready(function() {
     let waveList = WaveList.create({});
 
