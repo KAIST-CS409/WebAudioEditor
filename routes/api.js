@@ -1,6 +1,7 @@
 var formidable = require('formidable');
 var fs = require('fs');
 var grid = require('gridfs-stream');
+var async = require('async');
 
 module.exports = function(app, mongoose, conn, User)
 {
@@ -84,18 +85,18 @@ module.exports = function(app, mongoose, conn, User)
                 if(err) {
                     console.log(err);
                 } else {
-                    res.redirect('/');
+                    res.redirect('/'); // TODO: NEED TO BE CONSIDERED
                 }
             });
         } else {
-            res.redirect('/');
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
         }
     });
 
     //upload new audio to user's data space
     app.post('/audio', function (req, res) {
-        //var sess = req.session;
-        //if(sess.username){
+        var sess = req.session;
+        if(sess.username){
             var form = new formidable.IncomingForm();
             var fid;
             form.parse(req, function (err, fields, files) {
@@ -125,8 +126,7 @@ module.exports = function(app, mongoose, conn, User)
                     });
                     return;
                 } else {
-                    //User.findOne({username: sess.username}, function(err, user){
-                    User.findOne({username: "test"}, function(err, user){
+                    User.findOne({username: sess.username}, function(err, user){
                         if(err) {
                             res.status(500).json({
                                 result: -1,
@@ -159,14 +159,15 @@ module.exports = function(app, mongoose, conn, User)
                     });
                 }
             });
-        //} else {
-        //    res.redirect('/');
-        //}
+        } else {
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
+        }
     });
 
+    //download audiofile
     app.get('/audio/:_id', function (req, res) {
-        //var sess = req.session;
-        //if(sess.username){
+        var sess = req.session;
+        if(sess.username){
             grid.mongo = mongoose.mongo;
             var gfs = grid(conn.db);
             var fid = req.params._id;
@@ -187,14 +188,15 @@ module.exports = function(app, mongoose, conn, User)
                     gfs.createReadStream({ _id: fid }).pipe(res);
                 }
             });
-        //} else {
-        //    res.redirect('/');
-        //}
+        } else {
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
+        }
     });
 
+    //delete audiofile
     app.delete('/audio/:_id', function (req, res) {
-        //var sess = req.session;
-        //if(sess.username){
+        var sess = req.session;
+        if(sess.username){
             grid.mongo = mongoose.mongo;
             var gfs = grid(conn.db);
             var fid = req.params._id;
@@ -217,28 +219,55 @@ module.exports = function(app, mongoose, conn, User)
                             res.status(500).json({
                                 result: -1,
                                 message: err
-                            });
+                            }); 
                             return;
                         } else {
-                            res.status(200).json({
-                                result: 1,
-                                message: 'successful'
+                            User.findOne({username: sess.username}, function(err, user){
+                                if(err) {
+                                    res.status(500).json({
+                                        result: -1,
+                                        message: err
+                                    });
+                                    return;
+                                } else if(!user) {
+                                    res.status(500).json({
+                                        result: -1,
+                                        message: 'error'
+                                    });
+                                    return;
+                                } else {
+                                    user.audioIDs.pop(fid);
+                                    user.save(function(err){
+                                        if(err) {
+                                            console.error(err);
+                                            res.status(500).json({
+                                                result: -1,
+                                                message: err
+                                            });
+                                            return;
+                                        }
+                                        res.status(200).json({
+                                            result: 1,
+                                            message: 'successful'
+                                        });
+                                    });
+                                }
                             });
                         }
                     });
                 }
             });
-        //} else {
-        //    res.redirect('/');
-        //}
+        } else {
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
+        }
     });
 
+    //get list of audio files of user
     app.get('/user/audio', function (req, res) {
-        //var sess = req.session;
-        //if(sess.username){
-            //User.findOne({username: sess.username}, function(err, user){
-            var items = [];
-            User.findOne({username: 'test'}, function(err, user){
+        var items = [];
+        var sess = req.session;
+        if(sess.username){
+            User.findOne({username: sess.username}, function(err, user){
                 if(err) {
                     res.status(500).json({
                         result: -1,
@@ -253,29 +282,31 @@ module.exports = function(app, mongoose, conn, User)
                     return;
                 } else {
                     var fidArray = user.audioIDs;
-                    fidArray.forEach(function(fid){
-                        conn.db.collection('fs.files').findOne({'_id': fid}, function(err, item) {
+                    async.forEachOf(fidArray, function (value, key, callback){
+                        conn.db.collection('fs.files').findOne({'_id': value}, function(err, item) {
                             if (err) {
-                                res.status(500).json({
-                                    result: -1,
-                                    message: err
-                                });
-                                return;
+                                return callback(err);
                             } else {
-                                console.log(item);
                                 items.push(item);
-                                console.log('HAHA3');
-                                console.log(items);
                             }
+                            callback();
                         });
+                    }, function(errs) {
+                        if (err) {
+                            res.status(500).json({
+                                result: -1,
+                                message: err
+                            });
+                            return;
+                        } else {
+                            console.log(items);
+                            res.status(200).json(items);
+                        }
                     });
-                    console.log('HAHA');
-                    console.log(items);
-                    res.status(200).json(items);
                 }
             });
-        //} else {
-        //    res.redirect('/');
-        //}
+        } else {
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
+        }
     });
 }
