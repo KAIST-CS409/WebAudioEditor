@@ -1,8 +1,14 @@
+import $ from 'jquery';
+import 'dist/css/bootstrap.css';
+import 'dist/css/bootstrap-toggle.css';
+import 'dist/js/bootstrap.min.js';
+import 'dist/js/bootstrap-toggle.min.js';
+
 import WaveSurfer from 'wavesurfer/wavesurfer.js';
 import TimelinePlugin from 'wavesurfer/plugin/timeline.js';
 import RegionPlugin from 'wavesurfer/plugin/regions.js';
-import FileDownloader from 'fileDownloader.js'
-import FilterPlugin from 'filter.js'
+import FileDownloader from 'fileDownloader.js';
+import FilterPlugin from 'filter.js';
 
 export default class WaveList {
     waveformId = 0;
@@ -25,6 +31,8 @@ export default class WaveList {
     };
 
     init() {
+        this.removeRegionOnOutsideClick(this);
+        this.bindAddRowButton(this);
         return this;
     };
 
@@ -195,29 +203,35 @@ export default class WaveList {
             }
         }.bind(this));
 
-        $("#fade_in").unbind("click");
-        $("#fade_in").click(function() {
-            FilterPlugin.fadeIn(this.currentRegionInfo, this.wavesurfers);
-        }.bind(this));
-
-        $("#fade_out").unbind("click");
-        $("#fade_out").click(function() {
-            FilterPlugin.fadeOut(this.currentRegionInfo, this.wavesurfers);
-        }.bind(this));
-
         $("#trim").unbind("click");
         $("#trim").click(function() {
             FilterPlugin.trim(this.currentRegionInfo, this.wavesurfers);
         }.bind(this));
 
+        /* Here are audio filters applied to a specific region */
+        $("#fade_in").unbind("click");
+        $("#fade_in").click(function() {
+            let params = {};
+            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.fadeIn, params);
+        }.bind(this));
+
+        $("#fade_out").unbind("click");
+        $("#fade_out").click(function() {
+            let params = {};
+            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.fadeOut, params);
+        }.bind(this));
+
         $("#reverse").unbind("click");
         $("#reverse").click(function() {
-            FilterPlugin.reverse(this.currentRegionInfo, this.wavesurfers);
+            let params = {};
+            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.reverse, params);
         }.bind(this));
         
         $("#volume").unbind("click");
         $("#volume").click(function() {
-            FilterPlugin.volume(this.currentRegionInfo, this.wavesurfers);
+            let volumePercentage = $("#volume-ratio").val() / 100.0;
+            let params = {"volume": volumePercentage};
+            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.volume, params);
         }.bind(this));
     }
 
@@ -262,5 +276,25 @@ export default class WaveList {
                 this.wavesurfers[i].drawer.updateProgress(wsInstance.drawer.progressWave.offsetWidth);
             }
         }
+    }
+
+    removeRegionOnOutsideClick(waveList) {
+        $(document).click(function(event) {
+            console.log("Click doc");
+            if(!$(event.target).closest('wave').length) {
+                console.log("delete region");
+                console.log(this.currentRegionInfo);
+                if (this.currentRegionInfo != null) {
+                    this.currentRegionInfo["region"].remove();
+                    this.currentRegionInfo = null;
+                }
+            }
+        }.bind(this))
+    }
+
+    bindAddRowButton(waveList) {
+        $("#addRow").on("click", function() {
+            this.add("#waveContent");
+        }.bind(this));
     }
 }

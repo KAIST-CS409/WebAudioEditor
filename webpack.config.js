@@ -3,13 +3,15 @@ var webpack = require('webpack');
 
 module.exports = {
     context: __dirname,
-    entry: [
-        './src/index.js',
-    ],
+    entry: {
+        index: './src/index.js',
+        signin: './src/signin.js',
+        signup: './src/signup.js'
+    },
 
     output: {
-        path: path.resolve(__dirname, './public/js'),
-        filename: 'bundle.js'
+        path: path.resolve(__dirname, './public/build'),
+        filename: '[name].bundle.js'
     },
 
     module: {
@@ -29,16 +31,17 @@ module.exports = {
             {
                 test: /\.css$/,
                 loader: 'style-loader!css-loader'
-            }
+            },
+            { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
         ]
     },
 
     resolve: {
-        modules: [path.resolve(__dirname, './src'), 'node_modules'],
+        modules: [path.resolve(__dirname, './src'), path.resolve(__dirname, './public'), 'node_modules'],
         extensions: [".js", ".css"],
     },
 
-    devtool: 'source-map',
+    devtool: 'cheap-module-source-map',
     plugins:[
         new webpack.DefinePlugin({
           'process.env':{
@@ -50,6 +53,10 @@ module.exports = {
           compress:{
             warnings: true
           }
+        }),
+        new webpack.ProvidePlugin({
+            jQuery: 'jquery',
+            $: 'jquery'
         })
     ]
 

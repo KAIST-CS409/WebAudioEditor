@@ -1,6 +1,6 @@
 /* Referred http://stackoverflow.com/questions/22560413/html5-web-audio-convert-audio-buffer-into-wav-file */
 
-class fileDownloader {
+export default class FileDownloader {
   constructor() {
   }
   static saveToWav(buffer, startPosition=0, endPosition=buffer.length, isTrim=false, waveSurfer=null) {
@@ -56,5 +56,3 @@ class fileDownloader {
     (window.URL || window.webkitURL).revokeObjectURL(blob);
   }
 }
-
-export default fileDownloader
