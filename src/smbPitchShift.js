@@ -102,7 +102,7 @@ export default class PitchShifter {
         }
     };
 
-    static shift(pitchShift, sampleRate, buffer) {
+    static shift(pitchShift, sampleRate, buffer, callback) {
         let fftFrameSize = 2048;
         let osamp = 4;
         
@@ -254,5 +254,7 @@ export default class PitchShifter {
                 for (k = 0; k < inFifoLatency; k++) gInFIFO[k] = gInFIFO[k+stepSize];
             }
         }
+
+        callback();
     };
 }
