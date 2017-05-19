@@ -19,6 +19,7 @@ module.exports = function(app, mongoose, conn, User)
                 });
                 return;
             } else if(!user) {
+                newuser.password = newuser.generateHash(newuser.password);
                 newuser.save(function(err){
                     if(err) {
                         console.error(err);
@@ -44,11 +45,10 @@ module.exports = function(app, mongoose, conn, User)
     });
 
     //login
-    app.get('/signin/:username/:password', function (req, res){
+    app.post('/signin', function (req, res){
         var sess = req.session;
-        var result = {};
 
-        User.findOne({username: req.params.username}, function(err, user){
+        User.findOne({username: req.body["username"]}, function(err, user){
             if(err) {
                 res.status(500).json({
                     result: -1,
@@ -61,14 +61,14 @@ module.exports = function(app, mongoose, conn, User)
                     message: 'invalid username'
                 });
                 return;
-            } else if(user.password != req.params.password) {
+            } else if(!user.validateHash(req.body["password"])) {
                 res.status(404).json({
                     result: 0,
                     message: 'invalid password'
                 });
                 return;
             } else {
-                sess.username = username;
+                sess.username = user.username;
                 res.status(200).json({
                     result: 1,
                     message: 'successful'
@@ -81,13 +81,8 @@ module.exports = function(app, mongoose, conn, User)
     app.get('/signout', function (req, res){
         var sess = req.session;
         if(sess.username){
-            req.session.destroy(function(err){
-                if(err) {
-                    console.log(err);
-                } else {
-                    res.redirect('/'); // TODO: NEED TO BE CONSIDERED
-                }
-            });
+            req.session = null;
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
         } else {
             res.redirect('/'); // TODO: NEED TO BE CONSIDERED
         }
