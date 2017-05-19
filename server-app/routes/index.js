@@ -2,8 +2,55 @@ var formidable = require('formidable');
 var fs = require('fs');
 var grid = require('gridfs-stream');
 
-module.exports = function(app, mongoose, conn)
+module.exports = function(app, mongoose, conn, User)
 {
+    app.post('/users', function (req, res) {
+        var user = new User();
+        user.username = req.body.username;
+        user.password = req.body.password;
+
+        user.save(function(err){
+        if(err){
+            console.error(err);
+            res.json({result: 0});
+            return;
+        }
+        res.json({result: 1});
+        });
+    });
+
+    app.get('/login/:username/:password', function (req, res){
+        var sess = req.session;
+        var result = {};
+
+        User.findOne({username: req.params.username}, function(err, user){
+            if(err)
+                return res.status(500).json({error: err});
+            if(!user)
+                return res.status(404).json({error: 'invalid username'});
+            if(user.password != req.params.password)
+                return res.status(404).json({error: 'invalid password'});
+            else{
+                result["success"] = 1;
+                sess.username = username;
+                res.json(result);
+            }
+        });
+    });
+
+    app.get('/logout', function (req, res){
+        var sess = req.session;
+        if(sess.username){
+            req.session.destroy(function(err){
+                if(err){
+                    con
+                }
+            })
+        }
+    });
+
+
+asdf;lkjasd;flkjas
     app.post('/api/uploadAudio', function (req, res) {
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) {
