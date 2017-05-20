@@ -34,6 +34,7 @@ export default class WaveList {
         // this.removeRegionOnOutsideClick(this);
         this.bindAddRowButton(this);
         this.bindGeneralButtons();
+        FilterPlugin.alertWithSnackbar = this.alertWithSnackbar;
         return this;
     };
 
@@ -310,5 +311,19 @@ export default class WaveList {
             FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, filterFunction, params);
             $("#loading").hide();
         }, 0);
+    }
+
+    alertWithSnackbar(message) {
+        // Get the snackbar DIV
+        let snackbar = $("#snackbar");
+        // Add the "show" class to DIV
+        snackbar.text(message);
+        snackbar.attr("class", "show");
+
+        // After 3 seconds, remove the show class from DIV
+        setTimeout(function(){
+            snackbar.text("");
+            snackbar.attr("class", "");
+        }, 3000);
     }
 }
