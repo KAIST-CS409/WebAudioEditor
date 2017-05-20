@@ -233,6 +233,13 @@ export default class WaveList {
             let params = {"volume": volumePercentage};
             FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.volume, params);
         }.bind(this));
+
+        $("#pitch").unbind("click");
+        $("#pitch").click(function() {
+            let pitchChangeValue = $("#pitch-key").val();
+            let params = {"pitch": pitchChangeValue};
+            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.pitch, params);
+        }.bind(this));
     }
 
     addNewRegion(waveformNum, region) {
