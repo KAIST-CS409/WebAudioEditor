@@ -7,7 +7,7 @@
     "build": "webpack",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "bstart": "webpack && cross-env NODE_ENV=production node ./bin/www",
-    "development": "cross-env NODE_ENV=development nodemon ./bin/www"
+    "development": "cross-env NODE_ENV=development nodemon --watch bin --watch routes --watch app.js ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.15.1",

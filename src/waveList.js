@@ -31,8 +31,9 @@ export default class WaveList {
     };
 
     init() {
-        this.removeRegionOnOutsideClick(this);
+        // this.removeRegionOnOutsideClick(this);
         this.bindAddRowButton(this);
+        this.bindGeneralButtons();
         return this;
     };
 
@@ -140,7 +141,6 @@ export default class WaveList {
 
             wsInstance.setVolume(0.5);
 
-            this.bindGeneralButtons();
         }.bind(this));
 
         this.bindLocalButtons(waveformNum, wsInstance);
@@ -169,7 +169,6 @@ export default class WaveList {
             for (var i = 0; i < this.wavesurfers.length; i++) {
                 this.wavesurfers[i].play();
             }
-            console.log(this.currentRegionInfo);
         }.bind(this));
 
         $("#pause").unbind("click");
@@ -212,33 +211,33 @@ export default class WaveList {
         $("#fade_in").unbind("click");
         $("#fade_in").click(function() {
             let params = {};
-            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.fadeIn, params);
+            this.showLoadingForFilterFunction(FilterPlugin.fadeIn, params);
         }.bind(this));
 
         $("#fade_out").unbind("click");
         $("#fade_out").click(function() {
             let params = {};
-            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.fadeOut, params);
+            this.showLoadingForFilterFunction(FilterPlugin.fadeOut, params);
         }.bind(this));
 
         $("#reverse").unbind("click");
         $("#reverse").click(function() {
             let params = {};
-            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.reverse, params);
+            this.showLoadingForFilterFunction(FilterPlugin.reverse, params);
         }.bind(this));
         
         $("#volume").unbind("click");
         $("#volume").click(function() {
             let volumePercentage = $("#volume-ratio").val() / 100.0;
             let params = {"volume": volumePercentage};
-            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.volume, params);
+            this.showLoadingForFilterFunction(FilterPlugin.volume, params);
         }.bind(this));
 
         $("#pitch").unbind("click");
         $("#pitch").click(function() {
             let pitchChangeValue = $("#pitch-key").val();
             let params = {"pitch": pitchChangeValue};
-            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, FilterPlugin.pitch, params);
+            this.showLoadingForFilterFunction(FilterPlugin.pitch, params);
         }.bind(this));
     }
 
@@ -303,5 +302,13 @@ export default class WaveList {
         $("#addRow").on("click", function() {
             this.add("#waveContent");
         }.bind(this));
+    }
+
+    showLoadingForFilterFunction(filterFunction, params) {
+        $("#loading").show();
+        setTimeout(() => {
+            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, filterFunction, params);
+            $("#loading").hide();
+        }, 0);
     }
 }
