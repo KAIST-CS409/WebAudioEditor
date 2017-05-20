@@ -103,8 +103,8 @@ export default class PitchShifter {
     };
 
     static shift(pitchShift, sampleRate, buffer, callback) {
-        let fftFrameSize = 2048;
-        let osamp = 4;
+        let fftFrameSize = 1024;
+        let osamp = 32;
         
         var gInFIFO = Array(8192).fill(0.0);
         var gOutFIFO = Array(8192).fill(0.0);
