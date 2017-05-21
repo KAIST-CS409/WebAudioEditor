@@ -31,8 +31,12 @@
                 <li><a href="#">Library</a></li>
               </ul>
               <ul class="nav navbar-nav navbar-right">
-                <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a href="/signin"><span class="glyphicon glyphicon-log-in"></span> Sign In</a></li>
+                  <% if (!isLoggedIn) { %>
+                    <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a href="/signin"><span class="glyphicon glyphicon-log-in"></span> Sign In</a></li>
+                  <% } else { %>
+                    <li><a href="/signout"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a></li>
+                  <% } %>
               </ul>
             </div><!--/.nav-collapse -->
           </div>

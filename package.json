@@ -10,12 +10,20 @@
     "development": "cross-env NODE_ENV=development nodemon --watch bin --watch routes --watch app.js ./bin/www"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "~1.15.1",
     "cookie-parser": "~1.4.3",
+    "cookie-session": "^2.0.0-beta.1",
     "debug": "~2.2.0",
     "ejs": "~2.4.1",
     "express": "~4.13.4",
+    "express-session": "^1.15.3",
+    "express-session-mongo": "^0.1.0",
+    "formidable": "^1.1.1",
+    "fs": "0.0.1-security",
+    "gridfs-stream": "^1.1.1",
     "jquery": "^3.2.1",
+    "mongoose": "^4.9.10",
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.0"
   },

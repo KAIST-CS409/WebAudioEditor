@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var cookieSession = require('cookie-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -11,6 +13,10 @@ var signin = require('./routes/signin');
 var signup = require('./routes/signup');
 
 var app = express();
+
+//Connect to MongoDB server on localhost, db name to be changed
+mongoose.connect("mongodb://127.0.0.1:27017/mongodb_tutorial");
+var conn = mongoose.connection;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,12 +29,22 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: ['CS409TeamOne'],
+  maxAge: 3600000
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
 app.use('/signin', signin);
 app.use('/signup', signup);
+
+var user = require('./models/user');
+var apiRoutes = require('./routes/api')(app, mongoose, conn, user);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
