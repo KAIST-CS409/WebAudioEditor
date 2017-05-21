@@ -84,3 +84,38 @@ input[type=file] {
     from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
 }
+
+
+/* Styles for loading circle
+ * Referred https://gist.github.com/tjoskar/2163985
+ */
+
+@-webkit-keyframes rotate {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+#loading {
+    position: fixed;
+    z-index: 3;
+    display: none;
+    top: 50%;
+    left: 50%;
+    margin-top: -37.5px;
+    margin-left: -37.5px;
+    border: 2px solid deepskyblue;
+    border-right: 0;
+    border-bottom: 0;
+    -webkit-border-radius: 100px;
+    height: 75px;
+    width: 75px;
+    /*margin: 100px; */
+    -webkit-transition: all 0.5s ease-in;
+    -webkit-animation-name:             rotate;
+    -webkit-animation-duration:         1.0s;
+    -webkit-animation-iteration-count:  infinite;
+    -webkit-animation-timing-function: linear;
+}
