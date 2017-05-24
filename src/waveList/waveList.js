@@ -1,20 +1,19 @@
-import WaveSurfer from 'wavesurfer/wavesurfer.js';
-import TimelinePlugin from 'wavesurfer/plugin/timeline.js';
-import RegionPlugin from 'wavesurfer/plugin/regions.js';
-import FileDownloader from 'fileDownloader.js';
+import WaveSurfer from '../wavesurfer/wavesurfer.js';
+import TimelinePlugin from '../wavesurfer/plugin/timeline.js';
+import RegionPlugin from '../wavesurfer/plugin/regions.js';
+import FileDownloader from './fileDownloader.js';
 
 export default class WaveList {
-    waveformId = 0;
-    wavesurfers = [];
-    maxTrackLength = 0;
-
-    /* If there is a region in waveformId 1, currentRegionInfo becomes {id: 1, region: regionObject}
-     * regionObject.start gives start position, regionObject.end gives end position.
-     */
-    currentRegionInfo = null; 
-    timeline = null;
-
     constructor(params) {
+        this.waveformId = 0;
+        this.wavesurfers = [];
+        this.maxTrackLength = 0;
+
+        /* If there is a region in waveformId 1, currentRegionInfo becomes {id: 1, region: regionObject}
+         * regionObject.start gives start position, regionObject.end gives end position.
+         */
+        this.currentRegionInfo = null;
+        this.timeline = null;
 
     };
 
@@ -198,18 +197,22 @@ export default class WaveList {
         }
     }
 
+    removeRegion() {
+        if (this.currentRegionInfo != null) {
+            this.currentRegionInfo["region"].remove();
+            this.currentRegionInfo = null;
+        }
+    }
+
     removeRegionOnOutsideClick(waveList) {
         $(document).click(function(event) {
             console.log("Click doc");
             if(!$(event.target).closest('wave').length) {
                 console.log("delete region");
                 console.log(this.currentRegionInfo);
-                if (this.currentRegionInfo != null) {
-                    this.currentRegionInfo["region"].remove();
-                    this.currentRegionInfo = null;
-                }
+                this.removeRegion();
             }
-        }.bind(this))
+        }.bind(this));
     }
 
     bindAddRowButton(waveList) {

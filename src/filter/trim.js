@@ -1,45 +1,31 @@
-import FileDownloader from '../fileDownloader.js';
-
 export default class Trim {
     constructor() {
 
     };
 
-    static trim(regionInfo, wavesurfers) {
-        if (regionInfo != null) {
-            console.log(wavesurfers[regionInfo.id].backend.buffer);
-            console.log(regionInfo.region.start);
-            console.log(regionInfo.region.end);
+    static giveEffect(selectedTrackBuffer, startPositionInBuffer, endPositionInBuffer, params) {
+        let regionLengthInBuffer = endPositionInBuffer - startPositionInBuffer;
+        let wavesurfer = params["wavesurfer"];
+        var buffer = Trim.createBuffer(wavesurfer.backend.ac, selectedTrackBuffer, regionLengthInBuffer);
+        Trim.copyBuffer(selectedTrackBuffer, startPositionInBuffer, endPositionInBuffer, buffer, 0);
+        wavesurfer.loadDecodedBuffer(buffer);
+    }
 
-            let selectedRegion = regionInfo.region;
-            let selectedTrackBuffer = wavesurfers[regionInfo.id].backend.buffer;
+    /* Referred https://peteris.rocks/blog/wavesurfer-js-copy-audio/ */
+    static createBuffer(audioContext, originalBuffer, frameCount) {
+        var sampleRate = originalBuffer.sampleRate;
+        var channels = originalBuffer.numberOfChannels;
+        return audioContext.createBuffer(channels, frameCount, sampleRate);
+    }
 
-            let audioLengthInSec = selectedTrackBuffer.duration;
-            let startPositionInSec = selectedRegion.start;
-            let endPositionInSec = selectedRegion.end;
-
-            if (startPositionInSec >= audioLengthInSec){
-                Filter.alertWithSnackbar("Error : Region is placed on outside of audio.");
-                // ERROR: Without this management,
-                // Uncaught (in promise) DOMException: Unable to decode audio data
-                // UNLESS : Try to make trim in void area.
+    static copyBuffer(fromBuffer, fromStart, fromEnd, toBuffer, toStart) {
+        var frameCount = (fromEnd - fromStart);
+        for (var i = 0; i < fromBuffer.numberOfChannels; i++) {
+            var fromChanData = fromBuffer.getChannelData(i)
+            var toChanData = toBuffer.getChannelData(i)
+            for (var j = 0, f = fromStart, t = toStart; j < frameCount; j++, f++, t++) {
+                toChanData[t] = fromChanData[f];
             }
-
-            else {
-                let audioLengthInBuffer = selectedTrackBuffer.length;
-                let startPositionInBuffer = startPositionInSec / audioLengthInSec * audioLengthInBuffer;
-                let endPositionInBuffer = endPositionInSec / audioLengthInSec * audioLengthInBuffer;
-
-                let blob = FileDownloader.saveToWav(selectedTrackBuffer,
-                    startPositionInBuffer, endPositionInBuffer, true, wavesurfers[regionInfo.id]);
-                regionInfo.region.remove();
-                regionInfo = null;
-            }
-        }
-        else {
-            Filter.alertWithSnackbar("Error : Region not selected for operation.");
-            // ERROR: User must specify trim region.
-            // Show error message to user.
         }
     }
 }

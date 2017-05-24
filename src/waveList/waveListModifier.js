@@ -1,10 +1,10 @@
-import FilterPlugin from 'filter/filter.js';
-import TrimFilter from 'filter/trim';
-import FadeInFilter from 'filter/fadeIn.js';
-import FadeOutFilter from 'filter/fadeOut.js';
-import PitchFilter from 'filter/pitch.js';
-import ReverseFilter from 'filter/reverse.js';
-import VolumeFilter from 'filter/volume.js';
+import FilterPlugin from '../filter/filter.js';
+import TrimFilter from '../filter/trim.js';
+import FadeInFilter from '../filter/fadeIn.js';
+import FadeOutFilter from '../filter/fadeOut.js';
+import PitchFilter from '../filter/pitch.js';
+import ReverseFilter from '../filter/reverse.js';
+import VolumeFilter from '../filter/volume.js';
 
 export default class WaveListModifier {
     constructor(waveList) {
@@ -40,7 +40,7 @@ export default class WaveListModifier {
         $("#stop").unbind("click");
         $("#stop").click(function() {
             for (var i = 0; i < this.waveList.wavesurfers.length; i++) {
-                this.waveList.wavesurfers[i].stop(0);
+                this.waveList.wavesurfers[i].stop();
             }
         }.bind(this));
 
@@ -63,7 +63,14 @@ export default class WaveListModifier {
 
         $("#trim").unbind("click");
         $("#trim").click(function() {
-            TrimFilter.trim(this.waveList.currentRegionInfo, this.waveList.wavesurfers);
+            for (var i = 0; i < this.waveList.wavesurfers.length; i++) {
+                this.waveList.wavesurfers[i].stop(0);
+            }
+            let wavesurfer = this.waveList.wavesurfers[this.waveList.currentRegionInfo.id];
+            let params = {"wavesurfer": wavesurfer};
+            let filterFunction = TrimFilter.giveEffect;
+            this.showLoadingForFilterFunction(filterFunction, params);
+            //TrimFilter.trim(this.waveList.currentRegionInfo, this.waveList.wavesurfers);
         }.bind(this));
 
         /* Here are audio filters applied to a specific region */
@@ -110,6 +117,7 @@ export default class WaveListModifier {
         setTimeout(() => {
             let filterPlugin = FilterPlugin.create(filterFunction, params);
             filterPlugin.applyFilter(this.waveList.currentRegionInfo, this.waveList.wavesurfers, filterFunction, params);
+            this.waveList.removeRegion();
             $("#loading").hide();
         }, 0);
     }

@@ -9,8 +9,8 @@ import 'css/index.css';
 
 
 
-import WaveList from 'waveList.js';
-import WaveListModifier from 'waveListModifier';
+import WaveList from 'waveList/waveList.js';
+import WaveListModifier from 'waveList/waveListModifier';
 
 
 
