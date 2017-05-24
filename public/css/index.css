@@ -1,18 +1,10 @@
 body {
-  padding: 50px;
-  font: 10px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
-
-.waveform-body {
-    padding-top: 30px;
+    padding-top: 80px;
 }
 
 .row {
-	margin: 5px;
+	margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .track-name {
@@ -25,7 +17,7 @@ input[type=file] {
     text-overflow: ellipsis;
     width:100%;
     font-size: 12px;
-    display:none;
+    display:block;
 }
 
 .vertical-align-center {

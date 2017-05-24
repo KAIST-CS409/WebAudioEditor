@@ -1,14 +1,7 @@
-import $ from 'jquery';
-import 'dist/css/bootstrap.css';
-import 'dist/css/bootstrap-toggle.css';
-import 'dist/js/bootstrap.min.js';
-import 'dist/js/bootstrap-toggle.min.js';
-
 import WaveSurfer from 'wavesurfer/wavesurfer.js';
 import TimelinePlugin from 'wavesurfer/plugin/timeline.js';
 import RegionPlugin from 'wavesurfer/plugin/regions.js';
 import FileDownloader from 'fileDownloader.js';
-import FilterPlugin from 'filter.js';
 
 export default class WaveList {
     waveformId = 0;
@@ -33,8 +26,6 @@ export default class WaveList {
     init() {
         // this.removeRegionOnOutsideClick(this);
         this.bindAddRowButton(this);
-        this.bindGeneralButtons();
-        FilterPlugin.alertWithSnackbar = this.alertWithSnackbar;
         return this;
     };
 
@@ -164,84 +155,6 @@ export default class WaveList {
         });
     }
 
-    bindGeneralButtons() {
-        $("#play").unbind("click");
-        $("#play").click(function() {
-            for (var i = 0; i < this.wavesurfers.length; i++) {
-                this.wavesurfers[i].play();
-            }
-        }.bind(this));
-
-        $("#pause").unbind("click");
-        $("#pause").click(function() {
-            for (var i = 0; i < this.wavesurfers.length; i++) {
-                this.wavesurfers[i].pause();
-            }
-        }.bind(this));
-
-        $("#stop").unbind("click");
-        $("#stop").click(function() {
-            for (var i = 0; i < this.wavesurfers.length; i++) {
-                this.wavesurfers[i].stop(0);
-            }
-        }.bind(this));
-
-        
-        $("#mute_on").unbind("click");
-        $("#mute_on").click(function() {
-            for (var i = 0; i < this.wavesurfers.length; i++) {
-                $("#mute" + i).bootstrapToggle('on')
-                this.wavesurfers[i].setMute(false);
-            }
-        }.bind(this));
-
-        $("#mute_off").unbind("click");
-        $("#mute_off").click(function() {
-            for (var i = 0; i < this.wavesurfers.length; i++) {
-                $("#mute" + i).bootstrapToggle('off')
-                this.wavesurfers[i].setMute(true);
-            }
-        }.bind(this));
-
-        $("#trim").unbind("click");
-        $("#trim").click(function() {
-            FilterPlugin.trim(this.currentRegionInfo, this.wavesurfers);
-        }.bind(this));
-
-        /* Here are audio filters applied to a specific region */
-        $("#fade_in").unbind("click");
-        $("#fade_in").click(function() {
-            let params = {};
-            this.showLoadingForFilterFunction(FilterPlugin.fadeIn, params);
-        }.bind(this));
-
-        $("#fade_out").unbind("click");
-        $("#fade_out").click(function() {
-            let params = {};
-            this.showLoadingForFilterFunction(FilterPlugin.fadeOut, params);
-        }.bind(this));
-
-        $("#reverse").unbind("click");
-        $("#reverse").click(function() {
-            let params = {};
-            this.showLoadingForFilterFunction(FilterPlugin.reverse, params);
-        }.bind(this));
-        
-        $("#volume").unbind("click");
-        $("#volume").click(function() {
-            let volumePercentage = $("#volume-ratio").val() / 100.0;
-            let params = {"volume": volumePercentage};
-            this.showLoadingForFilterFunction(FilterPlugin.volume, params);
-        }.bind(this));
-
-        $("#pitch").unbind("click");
-        $("#pitch").click(function() {
-            let pitchChangeValue = $("#pitch-key").val();
-            let params = {"pitch": pitchChangeValue};
-            this.showLoadingForFilterFunction(FilterPlugin.pitch, params);
-        }.bind(this));
-    }
-
     addNewRegion(waveformNum, region) {
         if (this.currentRegionInfo != null) {
             this.currentRegionInfo["region"].remove();
@@ -303,14 +216,6 @@ export default class WaveList {
         $("#addRow").on("click", function() {
             this.add("#waveContent");
         }.bind(this));
-    }
-
-    showLoadingForFilterFunction(filterFunction, params) {
-        $("#loading").show();
-        setTimeout(() => {
-            FilterPlugin.applyFilter(this.currentRegionInfo, this.wavesurfers, filterFunction, params);
-            $("#loading").hide();
-        }, 0);
     }
 
     alertWithSnackbar(message) {

@@ -1,7 +1,7 @@
 import $ from 'jquery';
-import 'css/signin.css';
 import 'dist/css/bootstrap.css';
 import 'dist/js/bootstrap.min.js';
+import 'css/signin.css';
 
 $(document).ready(function() {
     $("#form-signup").submit(() => {
