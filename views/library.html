@@ -68,28 +68,30 @@
             <!-- your page content -->
 
 
-            <button id="upload-audio" class="btn btn-sm btn-primary">
+            <!--<button id="upload-audio" class="btn btn-sm btn-primary">
                 New Audio File
-            </button>
+            </button>-->
 
-            <table class="table table-hover">
+            <div class="filebox bs3-primary">
+                <label for="upload-audio">New Audio File</label>
+                <input type="file" id="upload-audio">
+            </div>
+
+            <table id="audio-table" class="table table-hover">
                 <thead>
                     <tr>
                         <td class="col-md-3">Title</td>
-                        <td class="col-md-6">Created at</td>
+                        <td class="col-md-3">Created at</td>
+                        <td class="col-md-3">Size</td>
                         <td class="col-md-3">Buttons</td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Inuyasha_gayagm.mp3</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Lady_Brown.mp3</td>
-                        <td></td>
-                        <td></td>
+                        <td>2017.5.25 20:49</td>
+                        <td>2.35MB</td>
+                        <td><button id="audio0" class="btn btn-sm btn-default">Download</button></td>
                     </tr>
                 </tbody>
             </table>
