@@ -5,6 +5,7 @@ import FadeOutFilter from '../filter/fadeOut.js';
 import PitchFilter from '../filter/pitch.js';
 import ReverseFilter from '../filter/reverse.js';
 import VolumeFilter from '../filter/volume.js';
+import SpeedFilter from '../filter/speed.js';
 
 export default class WaveListModifier {
     constructor(waveList) {
@@ -108,6 +109,17 @@ export default class WaveListModifier {
             let pitchChangeValue = $("#pitch-key").val();
             let params = {"pitch": pitchChangeValue};
             let filterFunction = PitchFilter.giveEffect;
+            this.showLoadingForFilterFunction(filterFunction, params);
+        }.bind(this));
+
+        $("#speed").unbind("click");
+        $("#speed").click(function() {
+            for (var i = 0; i < this.waveList.wavesurfers.length; i++) {
+                this.waveList.wavesurfers[i].stop(0);
+            }
+            let speedChangeValue = $("#speed-ratio").val() / 100.0;
+            let params = {"speed": speedChangeValue};
+            let filterFunction = SpeedFilter.giveEffect;
             this.showLoadingForFilterFunction(filterFunction, params);
         }.bind(this));
     }
