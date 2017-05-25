@@ -118,6 +118,7 @@ export default class WaveListModifier {
                 this.waveList.wavesurfers[i].stop(0);
             }
             let speedChangeValue = $("#speed-ratio").val() / 100.0;
+            let wavesurfer = this.waveList.wavesurfers[this.waveList.currentRegionInfo.id];
             let params = {"speed": speedChangeValue, "wavesurfer": wavesurfer};
             let filterFunction = SpeedFilter.giveEffect;
             this.showLoadingForFilterFunction(filterFunction, params);

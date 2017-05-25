@@ -1,4 +1,4 @@
-import Shifter from './smbPitchShift.js';
+import Shifter from './util/smbPitchShift.js';
 import BufferCreator from './util/bufferCreator.js';
 
 export default class Speed {
@@ -11,6 +11,8 @@ export default class Speed {
         Then the region is played 2x faster, causing the region pitched up (so that pitch returns to the original) and achieve speed change. */
     static giveEffect(selectedTrackBuffer, startPositionInBuffer, endPositionInBuffer, params) {
         let speedRatio = params["speed"];
+        let wavesurfer = params["wavesurfer"];
+
         for (var channelNumber = 0; channelNumber < selectedTrackBuffer.numberOfChannels; channelNumber++) {
             var channelData = selectedTrackBuffer.getChannelData(channelNumber).slice(startPositionInBuffer, endPositionInBuffer);
             var originalChannelData = selectedTrackBuffer.getChannelData(channelNumber);
@@ -22,7 +24,7 @@ export default class Speed {
         }
 
         /* Create new buffer to store final result */
-        var decreasedLength = parseInt(endPositionInBuffer - startPositionInBuffer) * (1.0 - (1.0 / speedRatio)); // This value may be negative.
+        var decreasedLength = parseInt((endPositionInBuffer - startPositionInBuffer) * (1.0 - (1.0 / speedRatio))); // This value may be negative.
         var newBufferLength = selectedTrackBuffer.length - decreasedLength;
         var newBuffer = BufferCreator.createBuffer(wavesurfer.backend.ac, selectedTrackBuffer, newBufferLength);
 
@@ -54,11 +56,10 @@ export default class Speed {
                 This will be a value in newBuffer[i].
                 newStartPosition is offset. */
                 var interpolatedValue = originalChannelData[k - 1 + newStartPosition] * (1 - r) + originalChannelData[k + newStartPosition] * r;
-                channelData[i] = interpolatedValue;
+                channelData[i + newStartPosition] = interpolatedValue;
             }
         }
 
         /* Load new buffer into wavesurfer */
-        let wavesurfer = params["wavesurfer"];
         wavesurfer.loadDecodedBuffer(newBuffer);
     }}
