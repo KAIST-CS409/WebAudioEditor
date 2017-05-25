@@ -92,7 +92,6 @@ module.exports = function(app, mongoose, conn, User)
     app.post('/audio', function (req, res) {
         var sess = req.session;
         if(sess.username){
-            console.log("HAHA");
             var form = new formidable.IncomingForm();
             var fid;
             form.parse(req, function (err, fields, files) {
@@ -368,7 +367,6 @@ module.exports = function(app, mongoose, conn, User)
                             });
                             return;
                         } else {
-                            console.log(items);
                             res.status(200).json(items);
                         }
                     });
