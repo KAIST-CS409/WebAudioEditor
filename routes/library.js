@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
         username = "";
         isLoggedIn = false;
     }
-    res.render('index', { title: 'Web Audio Editor', username: username, isLoggedIn: isLoggedIn});
+    res.render('library', { title: 'Web Audio Editor', username: username, isLoggedIn: isLoggedIn});
 });
 
 module.exports = router;

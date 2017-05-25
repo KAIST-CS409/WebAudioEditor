@@ -5,14 +5,8 @@ import 'dist/js/bootstrap.min.js';
 import 'dist/js/bootstrap-toggle.min.js';
 import 'css/index.css';
 
-
-
-
-
 import WaveList from 'waveList/waveList.js';
 import WaveListModifier from 'waveList/waveListModifier';
-
-
 
 $(document).ready(function() {
     let waveList = WaveList.create({});
