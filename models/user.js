@@ -5,7 +5,8 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
     username: String,
     password: String,
-    audioIDs: {type: Array, default: []}
+    audioIDs: {type: Array, default: []},
+    tempIDs: {type: Array, default: []}
 });
 
 // generates hash

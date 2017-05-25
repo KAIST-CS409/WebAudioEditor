@@ -11,6 +11,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var signin = require('./routes/signin');
 var signup = require('./routes/signup');
+var library = require('./routes/library');
 
 var app = express();
 
@@ -40,6 +41,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/signin', signin);
 app.use('/signup', signup);
+app.use('/library', library);
 
 var user = require('./models/user');
 var apiRoutes = require('./routes/api')(app, mongoose, conn, user);

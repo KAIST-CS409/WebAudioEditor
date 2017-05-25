@@ -2,12 +2,14 @@ import WaveSurfer from '../wavesurfer/wavesurfer.js';
 import TimelinePlugin from '../wavesurfer/plugin/timeline.js';
 import RegionPlugin from '../wavesurfer/plugin/regions.js';
 import FileDownloader from './fileDownloader.js';
+import BufferCreator from '../filter/util/bufferCreator';
 
 export default class WaveList {
     constructor(params) {
         this.waveformId = 0;
         this.wavesurfers = [];
         this.maxTrackLength = 0;
+        this.container =params["container"];
 
         /* If there is a region in waveformId 1, currentRegionInfo becomes {id: 1, region: regionObject}
          * regionObject.start gives start position, regionObject.end gives end position.
@@ -34,7 +36,8 @@ export default class WaveList {
         const waveformNum = this.waveformId++;
 
         this.addEmptyRow(container, waveformNum);
-        this.addWaveForm(waveformNum);
+        let wavesurfer = this.addWaveForm(waveformNum);
+        return wavesurfer;
     }
 
     addEmptyRow(container, waveformNum) {
@@ -65,7 +68,7 @@ export default class WaveList {
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <button id="download${waveformNum}" class="btn btn-sm btn-default"> 다운로드 </button>
+                            <button id="download${waveformNum}" class="btn btn-sm btn-default"> Download </button>
                         </div>
                     </div> 
                 </div>
@@ -135,6 +138,8 @@ export default class WaveList {
         }.bind(this));
 
         this.bindLocalButtons(waveformNum, wsInstance);
+
+        return wsInstance;
     }
 
     bindLocalButtons(waveformNum, wsInstance) {
@@ -217,7 +222,7 @@ export default class WaveList {
 
     bindAddRowButton(waveList) {
         $("#addRow").on("click", function() {
-            this.add("#waveContent");
+            this.add(this.container);
         }.bind(this));
     }
 

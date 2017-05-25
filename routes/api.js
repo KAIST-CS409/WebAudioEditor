@@ -88,6 +88,16 @@ module.exports = function(app, mongoose, conn, User)
         }
     });
 
+    app.get('/checkstatus', (req, res) => {
+        if(typeof req.session.username === "undefined") {
+            return res.status(401).json({
+                error: 1
+            });
+        }
+
+        res.json({ username: req.session.username});
+    });
+
     //upload new audio to user's data space
     app.post('/audio', function (req, res) {
         var sess = req.session;
@@ -147,7 +157,80 @@ module.exports = function(app, mongoose, conn, User)
                                 }
                                 res.status(201).json({
                                     result: 1,
-                                    message: 'successful'
+                                    message: 'successful',
+                                    audio_id: fid
+                                });
+                            });
+                        }
+                    });
+                }
+            });
+        } else {
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
+        }
+    });
+
+    //upload new audio to user's data space
+    app.post('/temp/audio', function (req, res) {
+        var sess = req.session;
+        if(sess.username){
+            var form = new formidable.IncomingForm();
+            var fid;
+            form.parse(req, function (err, fields, files) {
+                if (!err) {
+                    console.log('Files Uploaded: ' + files.file)
+                    grid.mongo = mongoose.mongo;
+                    var gfs = grid(conn.db);
+                    var writestream = gfs.createWriteStream({
+                        filename: files.file.name
+                    });
+                    fs.createReadStream(files.file.path).pipe(writestream);
+                    fid = writestream.id;
+                }
+                if (err) {
+                    res.status(500).json({
+                        result: -1,
+                        message: err
+                    });
+                    return;
+                }
+            });
+            form.on('end', function (err) {
+                if (err) {
+                    res.status(500).json({
+                        result: -1,
+                        message: err
+                    });
+                    return;
+                } else {
+                    User.findOne({username: sess.username}, function(err, user){
+                        if(err) {
+                            res.status(500).json({
+                                result: -1,
+                                message: err
+                            });
+                            return;
+                        } else if(!user) {
+                            res.status(500).json({
+                                result: -1,
+                                message: 'error'
+                            });
+                            return;
+                        } else {
+                            user.tempIDs.push(fid);
+                            user.save(function(err){
+                                if(err) {
+                                    console.error(err);
+                                    res.status(500).json({
+                                        result: -1,
+                                        message: err
+                                    });
+                                    return;
+                                }
+                                res.status(201).json({
+                                    result: 1,
+                                    message: 'successful',
+                                    audio_id: fid
                                 });
                             });
                         }
@@ -294,7 +377,6 @@ module.exports = function(app, mongoose, conn, User)
                             });
                             return;
                         } else {
-                            console.log(items);
                             res.status(200).json(items);
                         }
                     });

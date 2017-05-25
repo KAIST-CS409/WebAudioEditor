@@ -6,6 +6,7 @@ import PitchFilter from '../filter/pitch.js';
 import ReverseFilter from '../filter/reverse.js';
 import VolumeFilter from '../filter/volume.js';
 import SpeedFilter from '../filter/speed.js';
+import Mixer from './mixer';
 
 export default class WaveListModifier {
     constructor(waveList) {
@@ -72,6 +73,11 @@ export default class WaveListModifier {
             let filterFunction = TrimFilter.giveEffect;
             this.showLoadingForFilterFunction(filterFunction, params);
             //TrimFilter.trim(this.waveList.currentRegionInfo, this.waveList.wavesurfers);
+        }.bind(this));
+
+        $("#mix_all").unbind("click");
+        $("#mix_all").click(function() {
+            Mixer.mixDownAllTracks(this.waveList);
         }.bind(this));
 
         /* Here are audio filters applied to a specific region */
