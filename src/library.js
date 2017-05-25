@@ -39,7 +39,10 @@ $(document).ready(function() {
                         <td> ${filename} </td>
                         <td> ${dateString} </td>
                         <td> ${filesize}MB </td>
-                        <td><button id="audio0" class="btn btn-sm btn-default">Download</button></td>
+                        <td>
+                            <button id="audio0" class="btn btn-sm btn-default">Download</button>
+                            <button id="delete0" class="btn btn-sm btn-default">Delete</button>
+                        </td>
                    </tr>`;
 
         $('#audio-table > tbody:last-child').append(row);
@@ -59,7 +62,8 @@ $(document).ready(function() {
         });
 
     });
-    function roundUp(num, precision) {
-        return Math.ceil(num * precision) / precision;
-    };
 });
+
+function roundUp(num, precision) {
+    return Math.ceil(num * precision) / precision;
+};

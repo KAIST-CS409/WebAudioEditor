@@ -10,6 +10,8 @@ router.get('/', function(req, res, next) {
     if (typeof username === "undefined") {
         username = "";
         isLoggedIn = false;
+        res.render('index', { title: 'Web Audio Editor', username: username, isLoggedIn: isLoggedIn});
+        return;
     }
     res.render('library', { title: 'Web Audio Editor', username: username, isLoggedIn: isLoggedIn});
 });
