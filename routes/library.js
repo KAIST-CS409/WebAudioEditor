@@ -5,6 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
     var sess = req.session;
     var username = req.session.username;
+    console.log(username);
     var isLoggedIn = true;
     if (typeof username === "undefined") {
         username = "";

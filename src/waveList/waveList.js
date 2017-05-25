@@ -65,7 +65,7 @@ export default class WaveList {
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <button id="download${waveformNum}" class="btn btn-sm btn-default"> 다운로드 </button>
+                            <button id="download${waveformNum}" class="btn btn-sm btn-default"> Download </button>
                         </div>
                     </div> 
                 </div>
