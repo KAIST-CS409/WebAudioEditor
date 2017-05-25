@@ -1,4 +1,4 @@
-import Shifter from './smbPitchShift.js';
+import Shifter from './util/smbPitchShift.js';
 
 export default class Pitch {
     constructor() {
