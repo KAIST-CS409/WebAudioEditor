@@ -62,6 +62,29 @@ export default class WaveListModifier {
             }
         }.bind(this));
 
+        $("#zoom_in").unbind("click");
+        $("#zoom_in").click(function() {
+            let currentMaxLength = 0;
+            for (var i = 0; i < this.waveList.wavesurfers.length; i++) {
+                let instanceLength = this.waveList.wavesurfers[i].backend.getDuration();
+                if (instanceLength > currentMaxLength) {
+                    currentMaxLength = instanceLength;
+                }
+            }
+
+            if (currentMaxLength < this.waveList.maxTrackLength) {
+                let threshold = this.waveList.maxTrackLength - currentMaxLength;
+                this.waveList.maxTrackLength -= (threshold / 2);
+            }
+
+            for (var i = 0; i < this.waveList.wavesurfers.length; i++) {
+                console.log(this.waveList.wavesurfers[i].backend.buffer);
+                if (this.waveList.wavesurfers[i].backend.buffer !== null) {
+                    this.waveList.wavesurfers[i].drawer.fireEvent("redraw");
+                }
+            }
+        }.bind(this));
+
         $("#trim").unbind("click");
         $("#trim").click(function() {
             for (var i = 0; i < this.waveList.wavesurfers.length; i++) {

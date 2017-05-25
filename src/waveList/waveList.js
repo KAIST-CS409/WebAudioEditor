@@ -125,9 +125,7 @@ export default class WaveList {
                 this.maxTrackLength = length;
                 this.timeline.render();
                 for (var i = 0; i < this.wavesurfers.length; i++) {
-                    var targetLength = this.wavesurfers[i].backend.getDuration();
-                    if (targetLength != 0) { // targetLength is 0 if backend.buffer is undefined.
-                        console.log("redraw!");
+                    if (this.wavesurfers[i].backend.buffer !== null) {
                         this.wavesurfers[i].drawer.fireEvent("redraw");
                     }
                 }
