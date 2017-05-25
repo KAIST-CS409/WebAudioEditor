@@ -5,14 +5,8 @@ import 'dist/js/bootstrap.min.js';
 import 'dist/js/bootstrap-toggle.min.js';
 import 'css/index.css';
 
-
-
-
-
 import WaveList from 'waveList/waveList.js';
 import WaveListModifier from 'waveList/waveListModifier';
-
-
 
 $(document).ready(function() {
     let waveList = WaveList.create({});
@@ -26,4 +20,22 @@ $(document).ready(function() {
     waveList.addWaveForm(1);
     waveList.waveformId++;
     waveList.wavesurfers[1].load("/tracks/lady_brown.mp3");
+
+    $(".disable-function").click(function(){
+        alertWithSnackbar("Please login first");
+    });
 });
+
+function alertWithSnackbar(message) {
+    // Get the snackbar DIV
+    let snackbar = $("#snackbar");
+    // Add the "show" class to DIV
+    snackbar.text(message);
+    snackbar.attr("class", "show");
+
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){
+        snackbar.text("");
+        snackbar.attr("class", "");
+    }, 5000);
+}

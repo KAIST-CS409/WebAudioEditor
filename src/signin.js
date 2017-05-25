@@ -21,7 +21,6 @@ $(document).ready(function() {
                 }
             },
             error: (data) => {
-                console.log(data);
                 $("#alert-box").show();
             }
         });

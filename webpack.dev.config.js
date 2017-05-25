@@ -7,6 +7,7 @@ module.exports = {
         index: ['./src/index.js', 'webpack/hot/only-dev-server', 'webpack-dev-server/client?http://0.0.0.0:4000'],
         signin: ['./src/signin.js', 'webpack/hot/only-dev-server', 'webpack-dev-server/client?http://0.0.0.0:4000'],
         signup: ['./src/signup.js', 'webpack/hot/only-dev-server', 'webpack-dev-server/client?http://0.0.0.0:4000'],
+        library: ['./src/library.js', 'webpack/hot/only-dev-server', 'webpack-dev-server/client?http://0.0.0.0:4000']
     },
 
     output: {

@@ -88,6 +88,16 @@ module.exports = function(app, mongoose, conn, User)
         }
     });
 
+    app.get('/checkstatus', (req, res) => {
+        if(typeof req.session.username === "undefined") {
+            return res.status(401).json({
+                error: 1
+            });
+        }
+
+        res.json({ username: req.session.username});
+    });
+
     //upload new audio to user's data space
     app.post('/audio', function (req, res) {
         var sess = req.session;
