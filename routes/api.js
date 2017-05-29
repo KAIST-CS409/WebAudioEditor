@@ -250,7 +250,7 @@ module.exports = function(app, mongoose, conn, User)
             var gfs = grid(conn.db);
             var fid = req.params._id;
             gfs.exist({ _id: fid }, function(err, found) {
-                if (err) { 
+                if (err) {
                     res.status(500).json({
                         result: -1,
                         message: err
