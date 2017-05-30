@@ -115,8 +115,7 @@ export default class WaveList {
         wsInstance.on('ready', function () {
 
             let length = wsInstance.backend.getDuration();
-
-            let currentTimeLineLength = 0;
+            
             if (this.timeline == null) {
                 this.timeline = TimelinePlugin.create({
                     container: "#waveform-timeline",

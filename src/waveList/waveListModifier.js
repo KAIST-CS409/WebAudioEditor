@@ -7,6 +7,7 @@ import ReverseFilter from '../filter/reverse.js';
 import VolumeFilter from '../filter/volume.js';
 import SpeedFilter from '../filter/speed.js';
 import Copier from '../filter/copy.js';
+import Cutter from '../filter/cut.js';
 import Paster from '../filter/paste.js';
 import Mixer from './mixer';
 
@@ -137,6 +138,17 @@ export default class WaveListModifier {
             let wavesurfer = this.waveList.wavesurfers[this.waveList.currentRegionInfo.id];
             let params = {"wavesurfer": wavesurfer, "waveList": this.waveList};
             let filterFunction = Copier.giveEffect;
+            this.showLoadingForFilterFunction(filterFunction, params);
+        }.bind(this));
+
+        $("#cut").unbind("click");
+        $("#cut").click(function() {
+            for (var i = 0; i < this.waveList.wavesurfers.length; i++) {
+                this.waveList.wavesurfers[i].stop(0);
+            }
+            let wavesurfer = this.waveList.wavesurfers[this.waveList.currentRegionInfo.id];
+            let params = {"wavesurfer": wavesurfer, "waveList": this.waveList};
+            let filterFunction = Cutter.giveEffect;
             this.showLoadingForFilterFunction(filterFunction, params);
         }.bind(this));
 
