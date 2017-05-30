@@ -17,6 +17,8 @@ export default class WaveList {
         this.currentRegionInfo = null;
         this.timeline = null;
 
+        this.copyBuffer = null;
+
     };
 
     static create(params) {
