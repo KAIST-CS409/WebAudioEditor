@@ -2,7 +2,7 @@ import WaveSurfer from '../wavesurfer/wavesurfer.js';
 import TimelinePlugin from '../wavesurfer/plugin/timeline.js';
 import RegionPlugin from '../wavesurfer/plugin/regions.js';
 import FileDownloader from './fileDownloader.js';
-import BufferCreator from '../filter/util/bufferCreator';
+
 
 export default class WaveList {
     constructor(params) {
@@ -113,9 +113,8 @@ export default class WaveList {
         this.wavesurfers.push(wsInstance);
 
         wsInstance.on('ready', function () {
-
             let length = wsInstance.backend.getDuration();
-            
+
             if (this.timeline == null) {
                 this.timeline = TimelinePlugin.create({
                     container: "#waveform-timeline",
@@ -137,6 +136,11 @@ export default class WaveList {
         }.bind(this));
 
         this.bindLocalButtons(waveformNum, wsInstance);
+
+        /* Load empty buffer */
+        let audioContext = wsInstance.backend.ac;
+        let emptyBuffer = audioContext.createBuffer(2, 44100 * 30, 44100);
+        wsInstance.loadDecodedBuffer(emptyBuffer);
 
         return wsInstance;
     }
