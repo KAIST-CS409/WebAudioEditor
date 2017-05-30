@@ -19,8 +19,6 @@ export default class Paste {
         if (startPositionInBuffer >= selectedTrackBuffer.length) {
             newLength = startPositionInBuffer + copyBuffer.length;
             newBuffer = BufferCreator.createBuffer(wavesurfer.backend.ac, selectedTrackBuffer, newLength);
-            console.log("out of range!");
-            console.log(startPositionInBuffer);
             BufferCreator.copyBuffer(selectedTrackBuffer, 0, selectedTrackBuffer.length, newBuffer, 0);
             BufferCreator.copyBuffer(copyBuffer, 0, copyBuffer.length, newBuffer, newStartPosition);
         } else {
