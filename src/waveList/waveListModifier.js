@@ -6,7 +6,11 @@ import PitchFilter from '../filter/pitch.js';
 import ReverseFilter from '../filter/reverse.js';
 import VolumeFilter from '../filter/volume.js';
 import SpeedFilter from '../filter/speed.js';
+import Copier from '../filter/copy.js';
+import Cutter from '../filter/cut.js';
+import Paster from '../filter/paste.js';
 import Mixer from './mixer';
+
 
 export default class WaveListModifier {
     constructor(waveList) {
@@ -82,6 +86,8 @@ export default class WaveListModifier {
                 }
             }
 
+            this.waveList.removeRegion();
+
             for (var i = 0; i < this.waveList.wavesurfers.length; i++) {
                 console.log(this.waveList.wavesurfers[i].backend.buffer);
                 if (this.waveList.wavesurfers[i].backend.buffer !== null) {
@@ -103,6 +109,8 @@ export default class WaveListModifier {
             let extension = this.waveList.maxTrackLength / 5;
             this.waveList.maxTrackLength += extension;
 
+            this.waveList.removeRegion();
+
             for (var i = 0; i < this.waveList.wavesurfers.length; i++) {
                 console.log(this.waveList.wavesurfers[i].backend.buffer);
                 if (this.waveList.wavesurfers[i].backend.buffer !== null) {
@@ -120,7 +128,39 @@ export default class WaveListModifier {
             let params = {"wavesurfer": wavesurfer};
             let filterFunction = TrimFilter.giveEffect;
             this.showLoadingForFilterFunction(filterFunction, params);
-            //TrimFilter.trim(this.waveList.currentRegionInfo, this.waveList.wavesurfers);
+        }.bind(this));
+
+        $("#copy").unbind("click");
+        $("#copy").click(function() {
+            for (var i = 0; i < this.waveList.wavesurfers.length; i++) {
+                this.waveList.wavesurfers[i].stop(0);
+            }
+            let wavesurfer = this.waveList.wavesurfers[this.waveList.currentRegionInfo.id];
+            let params = {"wavesurfer": wavesurfer, "waveList": this.waveList};
+            let filterFunction = Copier.giveEffect;
+            this.showLoadingForFilterFunction(filterFunction, params);
+        }.bind(this));
+
+        $("#cut").unbind("click");
+        $("#cut").click(function() {
+            for (var i = 0; i < this.waveList.wavesurfers.length; i++) {
+                this.waveList.wavesurfers[i].stop(0);
+            }
+            let wavesurfer = this.waveList.wavesurfers[this.waveList.currentRegionInfo.id];
+            let params = {"wavesurfer": wavesurfer, "waveList": this.waveList};
+            let filterFunction = Cutter.giveEffect;
+            this.showLoadingForFilterFunction(filterFunction, params);
+        }.bind(this));
+
+        $("#paste").unbind("click");
+        $("#paste").click(function() {
+            for (var i = 0; i < this.waveList.wavesurfers.length; i++) {
+                this.waveList.wavesurfers[i].stop(0);
+            }
+            let wavesurfer = this.waveList.wavesurfers[this.waveList.currentRegionInfo.id];
+            let params = {"wavesurfer": wavesurfer, "waveList": this.waveList};
+            let filterFunction = Paster.giveEffect;
+            this.showLoadingForFilterFunction(filterFunction, params, false);
         }.bind(this));
 
         $("#mix_all").unbind("click");
@@ -179,11 +219,11 @@ export default class WaveListModifier {
         }.bind(this));
     }
 
-    showLoadingForFilterFunction(filterFunction, params) {
+    showLoadingForFilterFunction(filterFunction, params, checkOutRegion = true) {
         $("#loading").show();
         setTimeout(() => {
             let filterPlugin = FilterPlugin.create(filterFunction, params);
-            filterPlugin.applyFilter(this.waveList.currentRegionInfo, this.waveList.wavesurfers, filterFunction, params);
+            filterPlugin.applyFilter(this.waveList.currentRegionInfo, this.waveList.wavesurfers, checkOutRegion);
             this.waveList.removeRegion();
             $("#loading").hide();
         }, 0);

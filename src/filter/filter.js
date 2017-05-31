@@ -17,7 +17,7 @@ export default class Filter {
         return this;
     };
 
-    applyFilter(regionInfo, wavesurfers) {
+    applyFilter(regionInfo, wavesurfers, checkOutRegion = true) {
         if (regionInfo != null) {
             console.log(wavesurfers[regionInfo.id].backend.buffer);
             console.log(regionInfo.region.start);
@@ -30,7 +30,7 @@ export default class Filter {
             let startPositionInSec = selectedRegion.start;
             let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
 
-            if (startPositionInSec >= audioLengthInSec) {
+            if (checkOutRegion && startPositionInSec >= audioLengthInSec) {
                 Filter.alertWithSnackbar("Error : Region not selected for operation.");
                 // ERROR: User must appropriate region.
                 // Region is out of audio range.

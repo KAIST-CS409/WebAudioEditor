@@ -79,6 +79,9 @@
                                 <button id="trim" class="btn btn-sm btn-default">Trim</button>
                                 <button id="reverse" class="btn btn-sm btn-default">Reverse</button>
                                 <button id="mix_all" class="btn btn-sm btn-default">Mix all</button>
+                                <button id="copy" class="btn btn-sm btn-default">Copy</button>
+                                <button id="cut" class="btn btn-sm btn-default">Cut</button>
+                                <button id="paste" class="btn btn-sm btn-default">Paste</button>
                                 <button id="zoom_in" type="button" class="btn btn-default btn-sm">
                                     <span class="glyphicon glyphicon-zoom-in"></span> Zoom-in
                                 </button>
@@ -86,17 +89,21 @@
                                     <span class="glyphicon glyphicon-zoom-out"></span> Zoom-out
                                 </button>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-12">
-                                <button id="volume" class="btn btn-sm btn-default">Change volume</button>
-                                <input type="number" id="volume-ratio" min="50" max="200" value="100">
-                            </div>
-                            <div class="col-md-12">
-                                <button id="pitch" class="btn btn-sm btn-default">Change pitch</button>
-                                <input type="number" id="pitch-key" min="-12" max="12" value="0">
-                            </div>
-                            <div class="col-md-12">
-                                <button id="speed" class="btn btn-sm btn-default">Change speed</button>
-                                <input type="number" id="speed-ratio" min="50" max="200" value="100">
+                                <span>
+                                    <button id="volume" class="btn btn-sm btn-default">Change volume</button>
+                                    <input type="number" id="volume-ratio" min="50" max="200" value="100">
+                                </span>
+                                <span>
+                                    <button id="pitch" class="btn btn-sm btn-default">Change pitch</button>
+                                    <input type="number" id="pitch-key" min="-12" max="12" value="0">
+                                </span>
+                                <span>
+                                    <button id="speed" class="btn btn-sm btn-default">Change speed</button>
+                                    <input type="number" id="speed-ratio" min="50" max="200" value="100">
+                                </span>
                             </div>
                         </div>
                         <div class="row">
@@ -179,7 +186,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="row">
                 <div class="col-md-12">

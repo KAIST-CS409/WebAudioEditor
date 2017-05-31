@@ -552,7 +552,8 @@ export default class RegionsPlugin {
             region = null;
             region = this.add(params || {});
             //const duration = this.wavesurfer.getDuration();
-            const width = 0.3;
+            const width = 0.002 * maxTrackLength;
+            console.log(maxTrackLength);
             region.update({
                 start: Math.min(start * maxTrackLength + width, start * maxTrackLength),
                 end: Math.max(start * maxTrackLength + width, start * maxTrackLength)
