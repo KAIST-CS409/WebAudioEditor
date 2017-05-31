@@ -24,7 +24,7 @@ export default class FileDownloader {
         waveSurfer.loadBlob(blob);
       }
       else {
-        fileDownloader.forceDownload(blob, "new_audio.wav");
+        FileDownloader.forceDownload(blob, "new_audio.wav");
       }
     };
 
