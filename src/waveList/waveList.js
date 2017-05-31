@@ -121,8 +121,8 @@ export default class WaveList {
                     timelineClickFunction: this.moveAndPlayAllByTimeline.bind(this)
                 }, wsInstance);
             }
-            if (length > this.maxTrackLength) {
-                this.maxTrackLength = length;
+            if (length + 20 > this.maxTrackLength) {
+                this.maxTrackLength = length + 20;
                 this.timeline.render();
                 for (var i = 0; i < this.wavesurfers.length; i++) {
                     if (this.wavesurfers[i].backend.buffer !== null) {

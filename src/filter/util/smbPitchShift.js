@@ -104,7 +104,8 @@ export default class PitchShifter {
 
     static shift(pitchShift, sampleRate, buffer, callback) {
         let fftFrameSize = 1024;
-        let osamp = 32;
+        //let osamp = 32; //Maximum quality
+        let osamp = 4;  // Minimum quality
         
         var gInFIFO = Array(8192).fill(0.0);
         var gOutFIFO = Array(8192).fill(0.0);

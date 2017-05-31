@@ -9,6 +9,7 @@ export default class MixAll {
         }
 
         let maxChannels = 1;
+        let realMaxTrackLength = 0;
 
         for (var i = 0; i < waveList.wavesurfers.length; i++) {
             if (waveList.wavesurfers[i].backend.buffer === null) {
@@ -18,11 +19,16 @@ export default class MixAll {
             if (channels > maxChannels) {
                 maxChannels = channels;
             }
+            let trackLength = waveList.wavesurfers[i].backend.getDuration();
+            if (trackLength > realMaxTrackLength) {
+                realMaxTrackLength = trackLength;
+            }
         }
 
         let audioContext = waveList.wavesurfers[0].backend.ac;
         let sampleRate = waveList.wavesurfers[0].backend.buffer.sampleRate;
-        let frameCount = waveList.maxTrackLength * sampleRate;
+
+        let frameCount = realMaxTrackLength * sampleRate;
         let newBuffer = audioContext.createBuffer(maxChannels, frameCount, sampleRate);
 
         for (var i = 0; i < maxChannels; i++) {
