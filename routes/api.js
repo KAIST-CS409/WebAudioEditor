@@ -131,7 +131,7 @@ module.exports = function(app, mongoose, conn, User)
                     });
                     return;
                 } else {
-                    User.findOne({username: "test"}, function(err, user){
+                    User.findOne({username: sess.username}, function(err, user){
                         if(err) {
                             res.status(500).json({
                                 result: -1,
@@ -203,7 +203,7 @@ module.exports = function(app, mongoose, conn, User)
                     });
                     return;
                 } else {
-                    User.findOne({username: "test"}, function(err, user){
+                    User.findOne({username: sess.username}, function(err, user){
                         if(err) {
                             res.status(500).json({
                                 result: -1,
@@ -300,7 +300,7 @@ module.exports = function(app, mongoose, conn, User)
                             }); 
                             return;
                         } else {
-                            User.findOne({username: "test"}, function(err, user){
+                            User.findOne({username: sess.username}, function(err, user){
                                 if(err) {
                                     res.status(500).json({
                                         result: -1,
@@ -349,7 +349,7 @@ module.exports = function(app, mongoose, conn, User)
         var items = [];
         var sess = req.session;
         if(sess.username){
-            User.findOne({username: "test"}, function(err, user){
+            User.findOne({username: sess.username}, function(err, user){
                 if(err) {
                     res.status(500).json({
                         result: -1,
