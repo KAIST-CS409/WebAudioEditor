@@ -131,7 +131,7 @@ module.exports = function(app, mongoose, conn, User)
                     });
                     return;
                 } else {
-                    User.findOne({username: sess.username}, function(err, user){
+                    User.findOne({username: "test"}, function(err, user){
                         if(err) {
                             res.status(500).json({
                                 result: -1,
@@ -203,7 +203,7 @@ module.exports = function(app, mongoose, conn, User)
                     });
                     return;
                 } else {
-                    User.findOne({username: sess.username}, function(err, user){
+                    User.findOne({username: "test"}, function(err, user){
                         if(err) {
                             res.status(500).json({
                                 result: -1,
@@ -300,7 +300,7 @@ module.exports = function(app, mongoose, conn, User)
                             }); 
                             return;
                         } else {
-                            User.findOne({username: sess.username}, function(err, user){
+                            User.findOne({username: "test"}, function(err, user){
                                 if(err) {
                                     res.status(500).json({
                                         result: -1,
@@ -314,21 +314,25 @@ module.exports = function(app, mongoose, conn, User)
                                     });
                                     return;
                                 } else {
-                                    user.audioIDs.pop(fid);
-                                    user.save(function(err){
-                                        if(err) {
-                                            console.error(err);
-                                            res.status(500).json({
-                                                result: -1,
-                                                message: err
+                                    var idx = user.audioIDs ? user.audioIDs.indexOf(fid) : -1;
+                                    console.log(idx);
+                                    if (idx !== -1){
+                                        user.audioIDs.splice(idx, 1);
+                                        user.save(function(err){
+                                            if(err) {
+                                                console.error(err);
+                                                res.status(500).json({
+                                                    result: -1,
+                                                    message: err
+                                                });
+                                                return;
+                                            }
+                                            res.status(200).json({
+                                                result: 1,
+                                                message: 'successful'
                                             });
-                                            return;
-                                        }
-                                        res.status(200).json({
-                                            result: 1,
-                                            message: 'successful'
                                         });
-                                    });
+                                    }
                                 }
                             });
                         }
@@ -345,7 +349,7 @@ module.exports = function(app, mongoose, conn, User)
         var items = [];
         var sess = req.session;
         if(sess.username){
-            User.findOne({username: sess.username}, function(err, user){
+            User.findOne({username: "test"}, function(err, user){
                 if(err) {
                     res.status(500).json({
                         result: -1,
@@ -353,9 +357,9 @@ module.exports = function(app, mongoose, conn, User)
                     });
                     return;
                 } else if(!user) {
-                    res.status(500).json({
+                    res.status(404).json({
                         result: -1,
-                        message: 'error'
+                        message: 'no user'
                     });
                     return;
                 } else {
