@@ -172,7 +172,8 @@ export default class TimelinePlugin {
             position: 'relative',
             userSelect: 'none',
             webkitUserSelect: 'none',
-            height: `${this.params.height}px`
+            height: `${this.params.height}px`,
+            cursor: "pointer"
         });
 
         if (wsParams.fillParent || wsParams.scrollParent) {
