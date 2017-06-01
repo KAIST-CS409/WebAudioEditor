@@ -77,10 +77,6 @@ export default class AudioLibrary {
                 console.log(data);
                 for (let i = 0; i < data.length; i++) {
                     let info = data[i];
-                    if (info == null) {
-                        //TODO: server gives null sometimes. This should not happen. server deletes two file at the same time.
-                        continue;
-                    }
                     let filename = info.filename;
                     let filesize = info.length / 1000 / 1000;
                     filesize = this.roundUp(filesize, 100);
