@@ -1,5 +1,4 @@
-
-
+import WaveList from "../waveList/waveList";
 
 export default class Filter {
 
@@ -31,7 +30,7 @@ export default class Filter {
             let endPositionInSec = Math.min(selectedRegion.end, audioLengthInSec);
 
             if (checkOutRegion && startPositionInSec >= audioLengthInSec) {
-                Filter.alertWithSnackbar("Error : Region not selected for operation.");
+                WaveList.alertWithSnackbar("Error : Region not selected for operation.");
                 // ERROR: User must appropriate region.
                 // Region is out of audio range.
             } else {
@@ -44,14 +43,9 @@ export default class Filter {
             }
         }
         else {
-            Filter.alertWithSnackbar("Error : Region not selected for operation.");
+            WaveList.alertWithSnackbar("Error : Region not selected for operation.");
             // ERROR: User must specify region.
             // Show error message to user.
         }
     }
-
-    static alertWithSnackbar(message) {
-        /* Should be overrided from waveList.js */
-    }
-
 }

@@ -70,6 +70,9 @@ export default class WaveList {
                     </div>
                     <div class="row">
                         <div class="col-md-12">
+                                <button id="library${waveformNum}" type="button" class="btn btn-sm btn-default" data-index="${waveformNum}" data-toggle="modal" data-target="#libraryModal">
+                                    Library
+                                </button>
                             <button id="download${waveformNum}" class="btn btn-sm btn-default"> Download </button>
                         </div>
                     </div> 
@@ -147,11 +150,16 @@ export default class WaveList {
 
     bindLocalButtons(waveformNum, wsInstance) {
         $("#download" + waveformNum).click(function() {
-            FileDownloader.saveToWav(wsInstance.backend.buffer);
+            FileDownloader.saveToWav(wsInstance.backend.buffer, false);
         });
         $("#upload" + waveformNum).change(function() {
             wsInstance.loadBlob(this.files[0]);
         });
+
+        $("#save" + waveformNum).click(function() {
+            FileDownloader.saveToWav(wsInstance.backend.buffer, true);
+
+        }.bind(this));
 
         $("#volume" + waveformNum).on("input", (function() {
             wsInstance.setVolume(this.value / 100.0);
@@ -229,7 +237,7 @@ export default class WaveList {
         }.bind(this));
     }
 
-    alertWithSnackbar(message) {
+    static alertWithSnackbar(message) {
         // Get the snackbar DIV
         let snackbar = $("#snackbar");
         // Add the "show" class to DIV

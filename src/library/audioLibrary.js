@@ -1,3 +1,4 @@
+import WaveList from "../waveList/waveList";
 export default class AudioLibrary {
 
     constructor(params) {
@@ -10,8 +11,6 @@ export default class AudioLibrary {
     }
 
     init() {
-        this.requestAudioList();
-        this.bindUpload();
         return this;
     }
 
@@ -33,8 +32,7 @@ export default class AudioLibrary {
         let day = date.getDate();
         let hours = date.getHours();
         let minutes = date.getMinutes();
-
-        let dateString = year + "." + month + "." + day + " " + hours + ":" + minutes;
+        let dateString = year + "." + month + "." + day + " " + ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2);
         return dateString;
     }
 
@@ -66,23 +64,48 @@ export default class AudioLibrary {
             this.requestDelete(rowObj.data("fid"));
             rowObj.remove();
         }.bind(this));
-
     }
 
-    requestAudioList() {
+    addAudioFileRowOnSelection(id, filename, dateString, filesize) {
+        let row = `<tr>
+                        <td class="text-center">
+                            <input type="radio" name="selected-audio" value=${id}>
+                        </td>
+                        <td> ${filename} </td>
+                        <td> ${dateString} </td>
+                        <td> ${filesize}MB </td>
+                   </tr>`;
+
+        let rowObj = $(row).appendTo('#audio-table > tbody:last-child');
+        //let rowObj = $('#audio-table > tbody:last-child').append(row);
+        rowObj.click(function() {
+            rowObj.find("input[type=radio]").first().prop('checked', true);
+        });
+        rowObj.data("fid", id);
+    }
+
+    requestAudioList(isSelectionMode) {
         $.ajax({
             url: "/user/audio",
             type: "GET",
             success: (data) => {
+                console.log("requestAudioList result!");
+                console.log(data.length);
                 console.log(data);
+                $('#audio-table > tbody').html("");
                 for (let i = 0; i < data.length; i++) {
                     let info = data[i];
                     let filename = info.filename;
                     let filesize = info.length / 1000 / 1000;
                     filesize = this.roundUp(filesize, 100);
                     let isoDate = info.uploadDate;
+                    console.log(isoDate);
                     let dateString = this.matchFormat(this.parseDate(isoDate));
-                    this.addAudioFileRow(info._id, filename, dateString, filesize);
+                    if (isSelectionMode) {
+                        this.addAudioFileRowOnSelection(info._id, filename, dateString, filesize);
+                    } else {
+                        this.addAudioFileRow(info._id, filename, dateString, filesize);
+                    }
                 }
             },
             error: (data) => {
@@ -98,6 +121,22 @@ export default class AudioLibrary {
             if (xhr.status == 200) {
                 url = window.URL.createObjectURL(xhr.response);
                 this.downloadAudioFileFromUrl(url, "audio_file" + "." + ext);
+            }
+        }.bind(this));
+
+        let src = "/audio/" + fid;
+        xhr.open('GET', src);
+        xhr.responseType = 'blob';
+        xhr.send(null);
+    }
+
+    requestBlobAndLoad(fid, waveList, waveformNum) {
+        let xhr = new XMLHttpRequest();
+        let url;
+        xhr.addEventListener('load', function(blob) {
+            if (xhr.status == 200) {
+                let blobObject = xhr.response;
+                waveList.wavesurfers[waveformNum].loadBlob(blobObject);
             }
         }.bind(this));
 
@@ -130,6 +169,28 @@ export default class AudioLibrary {
             },
             error: (data) => {
                 console.log("error: " +data.message);
+            }
+        });
+    }
+
+    static requestSave(audioFile, filename) {
+        console.log(audioFile);
+        console.log(filename);
+        let formData = new FormData();
+        formData.append("file", audioFile, filename);
+
+        $.ajax({
+            url: "/audio",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: (data) => {
+                console.log(data);
+                WaveList.alertWithSnackbar("Successfuly saved to library");
+            },
+            error: (data) => {
+                console.log("error: " +data);
             }
         });
     }
