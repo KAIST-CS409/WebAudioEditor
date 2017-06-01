@@ -191,6 +191,7 @@ export default class AudioLibrary {
             },
             error: (data) => {
                 console.log("error: " +data);
+                WaveList.alertWithSnackbar("Please login before saving to library");
             }
         });
     }
