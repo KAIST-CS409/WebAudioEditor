@@ -44,7 +44,8 @@ app.use('/signup', signup);
 app.use('/library', library);
 
 var user = require('./models/user');
-var apiRoutes = require('./routes/api')(app, mongoose, conn, user);
+var workspace = require('./models/workspace')
+var apiRoutes = require('./routes/api')(app, mongoose, conn, user, workspace);
 
 
 

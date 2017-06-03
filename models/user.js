@@ -6,7 +6,8 @@ var userSchema = new Schema({
     username: String,
     password: String,
     audioIDs: {type: Array, default: []},
-    tempIDs: {type: Array, default: []}
+    tempIDs: {type: Array, default: []},
+    workspaceIDs: {type: Array, default: []}
 });
 
 // generates hash
