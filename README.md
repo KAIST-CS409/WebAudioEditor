@@ -11,6 +11,9 @@ WebAudioEditor project is about an audio editor that can be used in the web envi
 
 The system consists of four modules: Handler, View, Server and DB. The Handler module uses Web Audio API to implement audio editing functions. It can modify audio files, workspaces, blocks and apply filters to selected blocks. After it finished loading or editing audio files it requests View module to render waveform of audio files. View component also renders main container view layout on the screen. As there are user data saved in the remote server, Handler module uses HTTP protocol communicates with Server module, which consists of node.js and express framework.  Handler module may requests audio, workspace or login info to the server and get responses about those information. Server module accepts these requests and then send queries to DB module, which is MongoDB, to get receive information.
 
+## Browser support
+This product is only supported in latest Chrome browser.
+
 ## How to start
 ### Dependency installation
 Install npm and mongodb before installing our project. Mongodb should run on localhost with port number 27017.
