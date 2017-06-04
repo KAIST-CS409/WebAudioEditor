@@ -7,7 +7,7 @@ Web-based audio editor with various filters and audio library.
 WebAudioEditor project is about an audio editor that can be used in the web environment. There are various application-based audio editors these days, but those products are too complicated for novice users who are not familiar with audio editing. Also, it is cumbersome to install those applications on the local computer. Therefore, our project targets novice web audio editor users and provide access in web environment to give high accessibility. Moreover, users can save their edited audio files in their library.
 
 ## Architecture
-<img src="https://github.com/KAIST-CS409/WebAudioEditor/raw/master/img/architecture.png" alt="architecture" width="70%">
+<img src="https://github.com/KAIST-CS409/WebAudioEditor/raw/master/img/architectureV2.png" alt="architecture" width="100%">
 
 The system consists of four modules: Handler, View, Server and DB. The Handler module uses Web Audio API to implement audio editing functions. It can modify audio files, workspaces, blocks and apply filters to selected blocks. After it finished loading or editing audio files it requests View module to render waveform of audio files. View component also renders main container view layout on the screen. As there are user data saved in the remote server, Handler module uses HTTP protocol communicates with Server module, which consists of node.js and express framework.  Handler module may requests audio, workspace or login info to the server and get responses about those information. Server module accepts these requests and then send queries to DB module, which is MongoDB, to get receive information.
 
