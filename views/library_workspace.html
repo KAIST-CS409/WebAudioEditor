@@ -24,7 +24,10 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/"><%= title %></a>
+            <a class="navbar-brand" href="/">
+                <span class="glyphicon glyphicon-signal"></span>
+                <%= title %>
+            </a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
@@ -59,8 +62,12 @@
                 <div id="navbar-side" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
 
-                        <li><a href="/library">Audio Library</a></li>
-                        <li class="active"><a href="#">Workspace Library</a></li>
+                        <li><a href="/library">
+                            <span class="glyphicon glyphicon-music"></span>
+                            Audio Library</a></li>
+                        <li class="active"><a href="#">
+                            <span class="glyphicon glyphicon-list"></span>
+                            Workspace Library</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </nav>

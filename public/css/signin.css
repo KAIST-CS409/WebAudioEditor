@@ -42,3 +42,7 @@ body {
 .alert {
     display: none;
 }
+
+span.glyphicon {
+    font-size: 50px;
+}
