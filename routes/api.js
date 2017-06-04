@@ -423,12 +423,11 @@ module.exports = function(app, mongoose, conn, User, Workspace)
 
     //create new workspace
     app.post('/user/workspace', function (req, res) {
-        var ObjectId = mongoose.Types.ObjectId
         var sess = req.session;
         if(sess.username){
             var newworkspace = new Workspace();
             newworkspace.name = req.body["name"];
-            newworkspace.workspaceTrackAudios = req.body["workspaceTrackAudios"];
+            newworkspace.workspaceTrackAudios = req.body["workspaceTrackAudios[]"];
             newworkspace.save(function(err, workspace){
                 if(err) {
                     console.error(err);
@@ -438,7 +437,7 @@ module.exports = function(app, mongoose, conn, User, Workspace)
                     });
                     return;
                 }
-                User.findOne({username: "cs409"}, function(err, user){
+                User.findOne({username: sess.username}, function(err, user){
                     if(err) {
                         res.status(500).json({
                             result: -1,
@@ -452,7 +451,8 @@ module.exports = function(app, mongoose, conn, User, Workspace)
                         });
                         return;
                     } else {
-                        user.workspaceIDs.push(mongoose.Types.ObjectId(workspace.id));
+                        let objId = mongoose.Types.ObjectId(workspace.id);
+                        user.workspaceIDs.push(objId);
                         user.save(function(err){
                             if(err) {
                                 console.error(err);
@@ -464,6 +464,7 @@ module.exports = function(app, mongoose, conn, User, Workspace)
                             }
                             res.status(201).json({
                                 result: 1,
+                                id: objId,
                                 message: 'successful'
                             });
                         });

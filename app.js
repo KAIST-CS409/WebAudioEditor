@@ -12,6 +12,7 @@ var users = require('./routes/users');
 var signin = require('./routes/signin');
 var signup = require('./routes/signup');
 var library = require('./routes/library');
+var library_workspace = require('./routes/library_workspace');
 
 var app = express();
 
@@ -42,6 +43,7 @@ app.use('/users', users);
 app.use('/signin', signin);
 app.use('/signup', signup);
 app.use('/library', library);
+app.use('/library_workspace', library_workspace);
 
 var user = require('./models/user');
 var workspace = require('./models/workspace')

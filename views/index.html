@@ -12,6 +12,7 @@
 
         <script src="/dist/js/pace.min.js"></script>
         <link rel="stylesheet" href="/dist/css/pace.css"/>
+        <script src="/build/index.bundle.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -47,10 +48,21 @@
         </nav>
 
         <div class="container">
-            
-            <div id="waveContent" class="waveform-body" >
-                <div class="row vertical-align-bottom">
+            <div id="waveContent" class="waveform-body" data-workspaceId="<%= workspaceId %>">
+                <div class="row">
                     <div class="col-md-2">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- <button id="load_workspace" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-upload"></span>
+                                    Load
+                                </button> -->
+                                <button id="save_workspace" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-download"></span>
+                                    Save Workspace
+                                </button>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <button id="play" class="btn btn-sm btn-default">
@@ -118,115 +130,118 @@
                 </div>
 
                 <br/>
-                
-                <div class="row">
-                    <div class="col-md-2">
-                        <div class="row vertical-align-center">
-                            <div class="col-md-4">
-                                <span class="track-name"> Track0 </span>
-                            </div>
-                            <div class="col-md-4">
-                                <input id="mute0" type="checkbox" checked data-toggle="toggle" data-on="ON" data-off="OFF" data-size="small">
-                            </div>
-                        </div>
-                        <div class="row vertical-align-center">
-                            <div class="col-md-2">
-                                <span class="glyphicon glyphicon-volume-up"></span>
-                            </div>
-                            <div class="col-md-10">
-                                <input type="range" id="volume0" min="0" max="100" value="50"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 padding-local-button">
-                                <button class="btn btn-sm btn-default btn-block" onclick="document.getElementById('upload0').click();">
-                                    <span class="glyphicon glyphicon-open"></span>
-                                    Upload
-                                </button>
-                                <input type="file" style="display:none;" id="upload0" accept = "audio/*"/>
-                            </div>
-                            <div class="col-md-6 padding-local-button right">
-                                <button id="download0" class="btn btn-sm btn-default btn-block">
-                                    <span class="glyphicon glyphicon-download-alt"></span>
-                                    Download
-                                </button>
-                            </div>
 
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 padding-local-button">
-                                <button id="library0" type="button" class="btn btn-sm btn-default btn-block" data-index="0" data-toggle="modal" data-target="#libraryModal">
-                                    <span class="glyphicon glyphicon-folder-open"></span>
-                                    Library
-                                </button>
+                <div id="waveList">
+                    <!-- <div class="row">
+                        <div class="col-md-2">
+                            <div class="row vertical-align-center">
+                                <div class="col-md-4">
+                                    <span class="track-name"> Track0 </span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input id="mute0" type="checkbox" checked data-toggle="toggle" data-on="ON" data-off="OFF" data-size="small">
+                                </div>
                             </div>
-                            <div class="col-md-6 padding-local-button right">
-                                <button id="save0" class="btn btn-sm btn-default btn-block">
-                                    <span class="glyphicon glyphicon-floppy-save"></span>
-                                    Save
-                                </button>
+                            <div class="row vertical-align-center">
+                                <div class="col-md-2">
+                                    <span class="glyphicon glyphicon-volume-up"></span>
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="range" id="volume0" min="0" max="100" value="50"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 padding-local-button">
+                                    <button class="btn btn-sm btn-default btn-block" onclick="document.getElementById('upload0').click();">
+                                        <span class="glyphicon glyphicon-open"></span>
+                                        Upload
+                                    </button>
+                                    <input type="file" style="display:none;" id="upload0" accept = "audio/*"/>
+                                </div>
+                                <div class="col-md-6 padding-local-button right">
+                                    <button id="download0" class="btn btn-sm btn-default btn-block">
+                                        <span class="glyphicon glyphicon-download-alt"></span>
+                                        Download
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 padding-local-button">
+                                    <button id="library0" type="button" class="btn btn-sm btn-default btn-block" data-index="0" data-toggle="modal" data-target="#libraryModal">
+                                        <span class="glyphicon glyphicon-folder-open"></span>
+                                        Library
+                                    </button>
+                                </div>
+                                <div class="col-md-6 padding-local-button right">
+                                    <button id="save0" class="btn btn-sm btn-default btn-block">
+                                        <span class="glyphicon glyphicon-floppy-save"></span>
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div id="waveRow0">
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-10">
-                        <div id="waveRow0">
-                        </div>
-                    </div>
-                </div>
 
-               <div class="row">
-                    <div class="col-md-2">
-                        <div class="row vertical-align-center">
-                            <div class="col-md-4">
-                                <span class="track-name"> Track1 </span>
+                   <div class="row">
+                        <div class="col-md-2">
+                            <div class="row vertical-align-center">
+                                <div class="col-md-4">
+                                    <span class="track-name"> Track1 </span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input id="mute1" type="checkbox" checked data-toggle="toggle" data-on="ON" data-off="OFF" data-size="small">
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <input id="mute1" type="checkbox" checked data-toggle="toggle" data-on="ON" data-off="OFF" data-size="small">
+                            <div class="row vertical-align-center">
+                                <div class="col-md-2">
+                                    <span class="glyphicon glyphicon-volume-up"></span>
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="range" id="volume1" min="0" max="100" value="50"/>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row vertical-align-center">
-                            <div class="col-md-2">
-                                <span class="glyphicon glyphicon-volume-up"></span>
-                            </div>
-                            <div class="col-md-10">
-                                <input type="range" id="volume1" min="0" max="100" value="50"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 padding-local-button">
-                                <button class="btn btn-sm btn-default btn-block" onclick="document.getElementById('upload1').click();">
-                                    <span class="glyphicon glyphicon-open"></span>
-                                    Upload
-                                </button>
-                                <input type="file" style="display:none;" id="upload1" accept = "audio/*"/>
-                            </div>
-                            <div class="col-md-6 padding-local-button right">
-                                <button id="download1" class="btn btn-sm btn-default btn-block">
-                                    <span class="glyphicon glyphicon-download-alt"></span>
-                                    Download
-                                </button>
-                            </div>
+                            <div class="row">
+                                <div class="col-md-6 padding-local-button">
+                                    <button class="btn btn-sm btn-default btn-block" onclick="document.getElementById('upload1').click();">
+                                        <span class="glyphicon glyphicon-open"></span>
+                                        Upload
+                                    </button>
+                                    <input type="file" style="display:none;" id="upload1" accept = "audio/*"/>
+                                </div>
+                                <div class="col-md-6 padding-local-button right">
+                                    <button id="download1" class="btn btn-sm btn-default btn-block">
+                                        <span class="glyphicon glyphicon-download-alt"></span>
+                                        Download
+                                    </button>
+                                </div>
 
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 padding-local-button">
-                                <button id="library1" type="button" class="btn btn-sm btn-default btn-block" data-index="1" data-toggle="modal" data-target="#libraryModal">
-                                    <span class="glyphicon glyphicon-folder-open"></span>
-                                    Library
-                                </button>
                             </div>
-                            <div class="col-md-6 padding-local-button right">
-                                <button id="save1" class="btn btn-sm btn-default btn-block">
-                                    <span class="glyphicon glyphicon-floppy-save"></span>
-                                    Save
-                                </button>
+                            <div class="row">
+                                <div class="col-md-6 padding-local-button">
+                                    <button id="library1" type="button" class="btn btn-sm btn-default btn-block" data-index="1" data-toggle="modal" data-target="#libraryModal">
+                                        <span class="glyphicon glyphicon-folder-open"></span>
+                                        Library
+                                    </button>
+                                </div>
+                                <div class="col-md-6 padding-local-button right">
+                                    <button id="save1" class="btn btn-sm btn-default btn-block">
+                                        <span class="glyphicon glyphicon-floppy-save"></span>
+                                        Save
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                   <div class="col-md-10">
-                       <div id="waveRow1">
+                       <div class="col-md-10">
+                           <div id="waveRow1">
+                           </div>
                        </div>
                    </div>
+                   -->
                </div>
             </div>
             <div class="row">
@@ -270,6 +285,5 @@
 
         <div id="snackbar"></div>
         <div id="loading"></div>
-        <script src="/build/index.bundle.js"></script>
     </body>
 </html>

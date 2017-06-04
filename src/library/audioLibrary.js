@@ -89,9 +89,9 @@ export default class AudioLibrary {
             url: "/user/audio",
             type: "GET",
             success: (data) => {
-                console.log("requestAudioList result!");
-                console.log(data.length);
-                console.log(data);
+                data.sort(function(a, b) {
+                    return new Date(a.uploadDate) - new Date(b.uploadDate);
+                });
                 $('#audio-table > tbody').html("");
                 for (let i = 0; i < data.length; i++) {
                     let info = data[i];
@@ -99,7 +99,6 @@ export default class AudioLibrary {
                     let filesize = info.length / 1000 / 1000;
                     filesize = this.roundUp(filesize, 100);
                     let isoDate = info.uploadDate;
-                    console.log(isoDate);
                     let dateString = this.matchFormat(this.parseDate(isoDate));
                     if (isSelectionMode) {
                         this.addAudioFileRowOnSelection(info._id, filename, dateString, filesize);
@@ -132,7 +131,6 @@ export default class AudioLibrary {
 
     requestBlobAndLoad(fid, waveList, waveformNum) {
         let xhr = new XMLHttpRequest();
-        let url;
         xhr.addEventListener('load', function(blob) {
             if (xhr.status == 200) {
                 let blobObject = xhr.response;
@@ -173,25 +171,40 @@ export default class AudioLibrary {
         });
     }
 
-    static requestSave(audioFile, filename) {
+    static requestSave(audioFile, filename, isTemp, params) {
         console.log(audioFile);
         console.log(filename);
         let formData = new FormData();
         formData.append("file", audioFile, filename);
 
+        let url;
+        if (isTemp) {
+            url = "/temp/audio";
+        } else {
+            url = "/audio";
+        }
+
         $.ajax({
-            url: "/audio",
+            url: url,
             type: "POST",
             data: formData,
             processData: false,
             contentType: false,
             success: (data) => {
                 console.log(data);
-                WaveList.alertWithSnackbar("Successfuly saved to library");
+                console.log(data["audio_id"]);
+                if (isTemp) {
+                    let waveformNum = params["waveformNum"];
+                    $("#waveRow" + waveformNum).data("tempId", data["audio_id"]);
+                    let modifier = params["waveListModifier"];
+                    modifier.leftSaveCall--;
+                    modifier.saveWorkspaceCallback();
+                }
+                WaveList.alertWithSnackbar("Successfuly saved to audio library");
             },
             error: (data) => {
                 console.log("error: " +data);
-                WaveList.alertWithSnackbar("Please login before saving to library");
+                WaveList.alertWithSnackbar("Please login before saving to audio library");
             }
         });
     }

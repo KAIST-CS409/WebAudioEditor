@@ -10,21 +10,65 @@ import Copier from '../filter/copy.js';
 import Cutter from '../filter/cut.js';
 import Paster from '../filter/paste.js';
 import Mixer from './mixer';
+import FileDownloader from './fileDownloader.js';
+
 
 
 export default class WaveListModifier {
-    constructor(waveList) {
+    constructor(waveList, audioLibrary, workspaceLibrary) {
         this.waveList = waveList;
+        this.leftSaveCall = 0;
+        this.workspaceId = null;
+        this.audioLibrary = audioLibrary;
+        this.workspaceLibrary = workspaceLibrary;
     }
 
-    static create(waveList) {
-        const waveListModifier = new WaveListModifier(waveList);
+    static create(waveList, audioLibrary, workspaceLibrary) {
+        const waveListModifier = new WaveListModifier(waveList, audioLibrary, workspaceLibrary);
         return waveListModifier.init();
     }
 
     init() {
         this.bindGeneralButtons();
+        this.bindLibraryButtons();
         return this;
+    }
+
+    bindLibraryButtons() {
+        let modifier = this;
+        $('#libraryModal').on('show.bs.modal', function (event) {
+            modifier.audioLibrary.requestAudioList(true);
+            let button = $(event.relatedTarget); // Button that triggered the modal
+            let waveformNum = button.data('index'); // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            let modal = $(this);
+            modal.find('.modal-title').data("index", waveformNum);
+            //modal.find('.modal-title').text('Upload file to Track' + waveformNum);
+        });
+
+        $('#modal-load').click(function() {
+            let waveformNum = $('#libraryModal').find('.modal-title').data("index");
+            let id = $('input[name=selected-audio]:checked').val();
+            this.audioLibrary.requestBlobAndLoad(id, this.waveList, waveformNum);
+        }.bind(this));
+
+        $("#load_workspace").unbind("click");
+        $("#load_workspace").click(function() {
+            //TODO: bind load workspace button in the editor page if necessary.
+        }.bind(this));
+
+        $("#save_workspace").unbind("click");
+        $("#save_workspace").click(function() {
+            this.leftSaveCall = this.waveList.wavesurfers.length;
+            for (let i = 0; i < this.waveList.wavesurfers.length; i++) {
+                let wsInstance = this.waveList.wavesurfers[i];
+                let params = {};
+                params["waveListModifier"] = this;
+                params["waveformNum"] = i;
+                FileDownloader.saveToWav(wsInstance.backend.buffer, 2, params);
+            }
+        }.bind(this));
     }
 
     bindGeneralButtons() {
@@ -226,5 +270,20 @@ export default class WaveListModifier {
             this.waveList.removeRegion();
             $("#loading").hide();
         }, 0);
+    }
+
+    saveWorkspaceCallback() {
+        console.log("leftSaveCall: " + this.leftSaveCall);
+        if (this.leftSaveCall == 0) {
+            let audioIdList = [];
+            for (let i = 0; i < this.waveList.wavesurfers.length; i++) {
+                let tempId = $("#waveRow" + i).data("tempId");
+                console.log(tempId);
+                audioIdList.push(tempId);
+            }
+            let params = {};
+            params["waveListModifier"] = this;
+            this.workspaceLibrary.requestSave("new_workspace", audioIdList, params);
+        }
     }
 }
