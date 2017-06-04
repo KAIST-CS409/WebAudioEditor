@@ -144,6 +144,10 @@ input[type=file] {
     border-color: #ccc;
 }
 
-.padding-zero {
-    padding:0;
+.padding-local-button {
+    padding: 0px 0px 0px 15px;
+}
+
+.padding-local-button.right {
+    padding-left: 5px;
 }
