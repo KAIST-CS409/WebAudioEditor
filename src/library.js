@@ -8,4 +8,6 @@ import AudioLibrary from './library/audioLibrary';
 
 $(document).ready(function() {
     let audioLibrary = AudioLibrary.create({});
+    audioLibrary.requestAudioList(false);
+    audioLibrary.bindUpload();
 });

@@ -64,15 +64,35 @@ export default class WaveList {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
-                            <input type="file" id="upload${waveformNum}" accept = "audio/*"/> 
+                        <div class="col-md-6">
+                            <button class="btn btn-sm btn-default" onclick="document.getElementById('upload${waveformNum}').click();">
+                                <span class="glyphicon glyphicon-open"></span>
+                                Upload
+                            </button>
+                            <input type="file" style="display:none;" id="upload${waveformNum}" accept = "audio/*"/>
+                        </div>
+                        <div class="col-md-6 padding-zero">
+                            <button id="download${waveformNum}" class="btn btn-sm btn-default">
+                                <span class="glyphicon glyphicon-download-alt"></span>
+                                Download
+                            </button>
+                        </div>
+
+                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button id="library${waveformNum}" type="button" class="btn btn-sm btn-default" data-index="${waveformNum}" data-toggle="modal" data-target="#libraryModal">
+                                <span class="glyphicon glyphicon-folder-open"></span>
+                                Library
+                            </button>
+                        </div>
+                        <div class="col-md-6 padding-zero">
+                            <button id="save${waveformNum}" class="btn btn-sm btn-default">
+                                <span class="glyphicon glyphicon-floppy-save"></span>
+                                Save
+                            </button>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button id="download${waveformNum}" class="btn btn-sm btn-default"> Download </button>
-                        </div>
-                    </div> 
                 </div>
                 <div class="col-md-10">
                     <div id="waveRow${waveformNum}">
@@ -147,11 +167,16 @@ export default class WaveList {
 
     bindLocalButtons(waveformNum, wsInstance) {
         $("#download" + waveformNum).click(function() {
-            FileDownloader.saveToWav(wsInstance.backend.buffer);
+            FileDownloader.saveToWav(wsInstance.backend.buffer, false);
         });
         $("#upload" + waveformNum).change(function() {
             wsInstance.loadBlob(this.files[0]);
         });
+
+        $("#save" + waveformNum).click(function() {
+            FileDownloader.saveToWav(wsInstance.backend.buffer, true);
+
+        }.bind(this));
 
         $("#volume" + waveformNum).on("input", (function() {
             wsInstance.setVolume(this.value / 100.0);
@@ -229,7 +254,7 @@ export default class WaveList {
         }.bind(this));
     }
 
-    alertWithSnackbar(message) {
+    static alertWithSnackbar(message) {
         // Get the snackbar DIV
         let snackbar = $("#snackbar");
         // Add the "show" class to DIV

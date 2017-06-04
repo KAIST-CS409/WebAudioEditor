@@ -7,6 +7,7 @@ import 'css/index.css';
 
 import WaveList from 'waveList/waveList.js';
 import WaveListModifier from 'waveList/waveListModifier';
+import AudioLibrary from './library/audioLibrary';
 
 $(document).ready(function() {
     let waveList = WaveList.create({container: "#waveContent"});
@@ -23,6 +24,28 @@ $(document).ready(function() {
 
     $(".disable-function").click(function(){
         alertWithSnackbar("Please login first");
+    });
+
+    let audioLibrary = AudioLibrary.create({});
+
+    $('#libraryModal').on('show.bs.modal', function (event) {
+        audioLibrary.requestAudioList(true);
+        let button = $(event.relatedTarget); // Button that triggered the modal
+        let waveformNum = button.data('index'); // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        let modal = $(this)
+        modal.find('.modal-title').data("index", waveformNum);
+        //modal.find('.modal-title').text('Upload file to Track' + waveformNum);
+    });
+
+    $('#modal-load').click(function() {
+        let waveformNum = $('#libraryModal').find('.modal-title').data("index");
+        console.log(waveformNum);
+
+        let id = $('input[name=selected-audio]:checked').val();
+        console.log(id);
+        audioLibrary.requestBlobAndLoad(id, waveList, waveformNum);
     });
 });
 

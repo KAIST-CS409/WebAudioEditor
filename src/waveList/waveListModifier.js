@@ -15,7 +15,6 @@ import Mixer from './mixer';
 export default class WaveListModifier {
     constructor(waveList) {
         this.waveList = waveList;
-        FilterPlugin.alertWithSnackbar = waveList.alertWithSnackbar;
     }
 
     static create(waveList) {
