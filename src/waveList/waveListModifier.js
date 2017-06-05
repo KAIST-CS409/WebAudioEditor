@@ -9,6 +9,8 @@ import SpeedFilter from '../filter/speed.js';
 import Copier from '../filter/copy.js';
 import Cutter from '../filter/cut.js';
 import Paster from '../filter/paste.js';
+import NoiseReductionFilter from '../filter/noiseReduction.js';
+import NoiseGeneratorFilter from '../filter/noiseGenerator';
 import Mixer from './mixer';
 import FileDownloader from './fileDownloader.js';
 
@@ -258,6 +260,21 @@ export default class WaveListModifier {
             let wavesurfer = this.waveList.wavesurfers[this.waveList.currentRegionInfo.id];
             let params = {"speed": speedChangeValue, "wavesurfer": wavesurfer};
             let filterFunction = SpeedFilter.giveEffect;
+            this.showLoadingForFilterFunction(filterFunction, params);
+        }.bind(this));
+
+        $("#reduce_noise").unbind("click");
+        $("#reduce_noise").click(function() {
+            let reduceFrequency = 500;
+            let params = {"frequency": reduceFrequency};
+            let filterFunction = NoiseReductionFilter.giveEffect;
+            this.showLoadingForFilterFunction(filterFunction, params);
+        }.bind(this));
+
+        $("#add_noise").unbind("click");
+        $("#add_noise").click(function() {
+            let params = {};
+            let filterFunction = NoiseGeneratorFilter.giveEffect;
             this.showLoadingForFilterFunction(filterFunction, params);
         }.bind(this));
     }
