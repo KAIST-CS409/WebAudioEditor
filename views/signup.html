@@ -10,6 +10,7 @@
     <link rel="icon" href="../../favicon.ico">
 
     <title><%= title %></title>
+    <script src="/build/signup.bundle.js"></script>
 </head>
 
 <body>
@@ -17,12 +18,20 @@
 <div class="container">
 
     <form id="form-signup" class="form-signin" method="post" action="">
-        <h2 class="form-signin-heading">Please sign up</h2>
+        <h2 class="form-signin-heading">
+            <div class="row">
+                <a href="/">
+                    <span class="glyphicon glyphicon-signal"></span>
+                    Web Audio Editor
+                </a>
+            </div>
+        </h2>
+        <br/>
         <label for="inputUsername" class="sr-only">Username</label>
         <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
         <br/>
         <div id="alert-box" class="alert alert-danger" role="alert">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -34,6 +43,5 @@
 
 
 </div> <!-- /container -->
-<script src="/build/signup.bundle.js"></script>
 </body>
 </html>

@@ -4,7 +4,8 @@ import AudioLibrary from '../library/audioLibrary';
 export default class FileDownloader {
     constructor() {
     }
-    static saveToWav(buffer, isSave=false) {
+    // saveMode 0: save to local computer, 1: save to normal audioLibrary, 2: save to temp audioLibrary
+    static saveToWav(buffer, saveMode = 0, params) {
         var worker = new Worker('/js/recorderWorker.js');
 
         // initialize the new worker
@@ -18,18 +19,24 @@ export default class FileDownloader {
             var blob = e.data;
             // this is would be your WAV blob
 
-            console.log(isSave);
-            if (isSave) {
-                AudioLibrary.requestSave(blob, "new_audio.wav");
-            } else {
-                FileDownloader.forceDownload(blob, "new_audio.wav");
+            console.log(saveMode);
+            switch (saveMode) {
+                case 0:
+                    FileDownloader.forceDownload(blob, "new_audio.wav");
+                    break;
+                case 1:
+                    AudioLibrary.requestSave(blob, "new_audio.wav", false, params);
+                    break;
+                case 2:
+                    AudioLibrary.requestSave(blob, "new_audio.wav", true, params);
+                    break;
             }
         };
 
         // send the channel data from our buffer to the worker
         var channels = [];
 
-        //Maxiumu number of channels should be 2.
+        //Maxiumum number of channels should be 2.
         for (var i = 0; i < buffer.numberOfChannels; i++) {
             channels.push(buffer.getChannelData(i));
         }

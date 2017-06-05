@@ -1,10 +1,21 @@
 var formidable = require('formidable');
 var fs = require('fs');
 var grid = require('gridfs-stream');
-var async = require('async');
+var async = require('async'); 
 
-module.exports = function(app, mongoose, conn, User)
+module.exports = function(app, mongoose, conn, User, Workspace)
 {
+
+
+
+
+
+    ///////////////////
+    //USER MANAGEMENT//
+    ///////////////////
+
+
+
     //create new user
     app.post('/user', function (req, res) {
         var newuser = new User();
@@ -88,15 +99,25 @@ module.exports = function(app, mongoose, conn, User)
         }
     });
 
+    //check the status of user
     app.get('/checkstatus', (req, res) => {
         if(typeof req.session.username === "undefined") {
             return res.status(401).json({
                 error: 1
             });
         }
-
         res.json({ username: req.session.username});
     });
+
+
+
+
+
+    ////////////////////
+    //AUDIO MANAGEMENT//
+    ////////////////////
+
+
 
     //upload new audio to user's data space
     app.post('/audio', function (req, res) {
@@ -315,7 +336,6 @@ module.exports = function(app, mongoose, conn, User)
                                     return;
                                 } else {
                                     var idx = user.audioIDs ? user.audioIDs.indexOf(fid) : -1;
-                                    console.log(idx);
                                     if (idx !== -1){
                                         user.audioIDs.splice(idx, 1);
                                         user.save(function(err){
@@ -390,4 +410,246 @@ module.exports = function(app, mongoose, conn, User)
             res.redirect('/'); // TODO: NEED TO BE CONSIDERED
         }
     });
+    
+
+
+
+
+    ////////////////////////
+    //WORKSPACE MANAGEMENT//
+    ////////////////////////
+
+
+
+    //create new workspace
+    app.post('/user/workspace', function (req, res) {
+        var sess = req.session;
+        if(sess.username){
+            var newworkspace = new Workspace();
+            newworkspace.name = req.body["name"];
+            newworkspace.workspaceTrackAudios = req.body["workspaceTrackAudios[]"];
+            newworkspace.save(function(err, workspace){
+                if(err) {
+                    console.error(err);
+                    res.status(500).json({
+                        result: -1,
+                        message: err
+                    });
+                    return;
+                }
+                User.findOne({username: sess.username}, function(err, user){
+                    if(err) {
+                        res.status(500).json({
+                            result: -1,
+                            message: err
+                        });
+                        return;
+                    } else if(!user) {
+                        res.status(500).json({
+                            result: -1,
+                            message: 'error'
+                        });
+                        return;
+                    } else {
+                        let objId = mongoose.Types.ObjectId(workspace.id);
+                        user.workspaceIDs.push(objId);
+                        user.save(function(err){
+                            if(err) {
+                                console.error(err);
+                                res.status(500).json({
+                                    result: -1,
+                                    message: err
+                                });
+                                return;
+                            }
+                            res.status(201).json({
+                                result: 1,
+                                id: objId,
+                                message: 'successful'
+                            });
+                        });
+                    }
+                });
+            });
+        } else {
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
+        }
+    });
+
+    //modify existing workspace
+    app.put('/user/workspace', function (req, res) {
+        var sess = req.session;
+        if(sess.username){
+            Workspace.findOne({_id: req.body["id"]}, function(err, workspace){
+                if(err) {
+                    console.error(err);
+                    res.status(500).json({
+                        result: -1,
+                        message: err
+                    });
+                    return;
+                } else if (!workspace) {
+                    res.status(404).json({
+                        result: -1,
+                        message: 'invalid workspace id'
+                    });
+                    return;
+                } else {
+                    workspace.workspaceTrackAudios = req.body["workspaceTrackAudios"];
+                    workspace.updated = new Date();
+                    workspace.save(function(err){
+                        if(err) {
+                            console.error(err);
+                            res.status(500).json({
+                                result: -1,
+                                message: err
+                            });
+                            return;
+                        }
+                        res.status(200).json({
+                            result: 1,
+                            message: 'successful'
+                        })
+                    });
+                }
+            });
+        } else {
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
+        }
+    });
+
+    //get the data of workspace
+    app.get('/user/workspace/:_id', function (req, res) {
+        var sess = req.session;
+        if(sess.username){
+            Workspace.findOne({_id: req.params._id}, function(err, workspace){
+                if(err) {
+                    console.error(err);
+                    res.status(500).json({
+                        result: -1,
+                        message: err
+                    });
+                    return;
+                } else if (!workspace) {
+                    console.log(new ObjectId(req.body["id"]))
+                    res.status(404).json({
+                        result: -1,
+                        message: 'invalid workspace id'
+                    });
+                    return;
+                } else {
+                        res.status(200).json({
+                            result: 1,
+                            message: 'successful',
+                            workspaceTrackAudios: workspace.workspaceTrackAudios
+                        });
+                }
+            });
+        } else {
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
+        }
+    });
+
+    //delete the existing workspace    
+    app.delete('/user/workspace/:_id', function (req, res) {
+        var sess = req.session;
+        if(sess.username){
+            Workspace.remove({_id: req.params._id}, function(err){
+                if(err) {
+                    console.error(err);
+                    res.status(500).json({
+                        result: -1,
+                        message: err
+                    });
+                    return;
+                } else {
+                    User.findOne({username: sess.username}, function(err, user){
+                        if(err) {
+                            res.status(500).json({
+                                result: -1,
+                                message: err
+                            });
+                            return;
+                        } else if(!user) {
+                            res.status(500).json({
+                                result: -1,
+                                message: 'error'
+                            });
+                            return;
+                        } else {
+                            var idx = user.workspaceIDs ? user.workspaceIDs.indexOf(req.params._id) : -1;
+                            console.log(idx);
+                            if (idx !== -1){
+                                user.workspaceIDs.splice(idx, 1);
+                                user.save(function(err){
+                                    if(err) {
+                                        console.error(err);
+                                        res.status(500).json({
+                                            result: -1,
+                                            message: err
+                                        });
+                                        return;
+                                    }
+                                    res.status(200).json({
+                                        result: 1,
+                                        message: 'successful'
+                                    });
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
+        }
+    });
+
+    //get the metadata of workspaces that the user has
+    app.get('/user/workspaces', function (req, res) {
+        var items = [];
+        var sess = req.session;
+        if(sess.username){
+            User.findOne({username: sess.username}, function(err, user){
+                if(err) {
+                    res.status(500).json({
+                        result: -1,
+                        message: err
+                    });
+                    return;
+                } else if(!user) {
+                    res.status(404).json({
+                        result: -1,
+                        message: 'no user'
+                    });
+                    return;
+                } else {
+                    var widArray = user.workspaceIDs;
+                    async.forEachOf(widArray, function (value, key, callback){
+                        Workspace.findOne({'_id': value}, function(err, item) {
+                            if (err) {
+                                return callback(err);
+                            } else {
+                                items.push(item);
+                            }
+                            callback();
+                        });
+                    }, function(errs) {
+                        if (err) {
+                            res.status(500).json({
+                                result: -1,
+                                message: err
+                            });
+                            return;
+                        } else {
+                            res.status(200).json(items);
+                        }
+                    });
+                }
+            });
+        } else {
+            res.redirect('/'); // TODO: NEED TO BE CONSIDERED
+        }
+    });
+
 }

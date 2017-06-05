@@ -16,7 +16,6 @@ export default class WaveList {
          */
         this.currentRegionInfo = null;
         this.timeline = null;
-
         this.copyBuffer = null;
 
     };
@@ -32,7 +31,18 @@ export default class WaveList {
         return this;
     };
 
-
+    clear() {
+        this.waveformId = 0;
+        this.wavesurfers = [];
+        $(this.container).html("");
+        this.currentRegionInfo = null;
+        if (this.timeline != null) {
+            this.timeline.destroy();
+            this.timeline = null;
+            $("#waveform-timeline").html("");
+        }
+        this.copyBuffer = null;
+    }
 
     add(container) {
         const waveformNum = this.waveformId++;
@@ -167,15 +177,14 @@ export default class WaveList {
 
     bindLocalButtons(waveformNum, wsInstance) {
         $("#download" + waveformNum).click(function() {
-            FileDownloader.saveToWav(wsInstance.backend.buffer, false);
+            FileDownloader.saveToWav(wsInstance.backend.buffer, 0);
         });
         $("#upload" + waveformNum).change(function() {
             wsInstance.loadBlob(this.files[0]);
         });
 
         $("#save" + waveformNum).click(function() {
-            FileDownloader.saveToWav(wsInstance.backend.buffer, true);
-
+            FileDownloader.saveToWav(wsInstance.backend.buffer, 1);
         }.bind(this));
 
         $("#volume" + waveformNum).on("input", (function() {

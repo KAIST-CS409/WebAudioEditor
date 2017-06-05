@@ -19,6 +19,7 @@ body {
     padding: .5em .75em;
     color: #999;
     font-size: inherit;
+    font-weight: normal;
     line-height: normal;
     vertical-align: middle;
     background-color: #fdfdfd;

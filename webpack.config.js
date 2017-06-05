@@ -7,7 +7,8 @@ module.exports = {
         index: './src/index.js',
         signin: './src/signin.js',
         signup: './src/signup.js',
-        library: './src/library.js'
+        library: './src/library.js',
+        library_workspace: './src/library_workspace.js'
     },
 
     output: {
